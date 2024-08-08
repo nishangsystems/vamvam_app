@@ -1,0 +1,47 @@
+class StateModel {
+  String? code;
+  String? message;
+  List<StateModelData>? data;
+
+  StateModel({this.code, this.message, this.data});
+
+  StateModel.fromJson(Map<String, dynamic> json) {
+    code = json['code'];
+    message = json['message'];
+    if (json['data'] != null) {
+      data = <StateModelData>[];
+      json['data'].forEach((v) {
+        data!.add(StateModelData.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['code'] = code;
+    data['message'] = message;
+    if (this.data != null) {
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class StateModelData {
+  String? id;
+  String? name;
+
+  StateModelData({this.id, this.name});
+
+  StateModelData.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    return data;
+  }
+}
