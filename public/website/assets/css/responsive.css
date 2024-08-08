@@ -1,0 +1,330 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.4.14,
+* Autoprefixer: v10.4.7
+* Browsers: last 4 version
+*/
+
+/* add responsive css */
+@media (min-width: 320px) and (max-width: 768px) {
+    .navbar-nav{
+        -webkit-box-align: start !important;
+            -ms-flex-align: start !important;
+                align-items: start !important;
+    }
+    .desktop-menu{
+        display: none;
+    }
+    .mobile-menu{
+        display: unset !important;
+    }
+    .left-side-request p {
+        margin-left: 1.5rem;
+    }
+    .list-items{
+        width: 100%;
+    }
+    .search-form .position-relative button{
+        width: 75px;
+    }
+    .right-header{
+        float: center;
+    }
+    .left-header{
+        display: none;
+    }
+    .home-cta-form {
+        float: unset;
+        width: 100%;
+    }
+
+    .boxex-choose-gap {
+        margin-top: unset;
+    }
+
+    .choose-item-two {
+        margin-top: unset;
+    }
+
+    .chart-container {
+        left: 0;
+    }
+
+    .bar {
+        width: 30px;
+    }
+
+    .bar::after {
+        width: 30px;
+    }
+
+    .two {
+        left: 29%;
+    }
+
+    .counter-area-start {
+        height: 100%;
+    }
+
+    /* .flip-box-area:nth-child(1) .do-box {
+        transform: rotate(90deg);
+    }
+
+    .flip-box-area:nth-child(2) .do-box {
+        transform: rotate(90deg);
+    }
+
+    .flip-box-area:nth-child(3) .do-box {
+        transform: rotate(90deg);
+    }
+
+    .road-map-inner-content {
+        transform: rotate(269deg);
+        top: 29%;
+    }
+
+    .road-map-inner-content-rotate {
+        transform: rotate(269deg);
+        top: 33%;
+    }
+
+    .road-map-inner-content-mid {
+        transform: rotate(269deg);
+        top: 32%;
+    } */
+    .footer-content{
+        text-align: left;
+    }
+    .choose-items{
+        margin-top: 0px;
+        margin-bottom: -40px;
+    }
+    .road-map-area-sec{
+        height: 100rem;
+    }
+    .road-map-inner-content {
+        position: absolute;
+        top: 36%;
+        left: 43%;
+        -webkit-transform: translate(-33%, -50%);
+            -ms-transform: translate(-33%, -50%);
+                transform: translate(-33%, -50%);
+    }
+    .road-map-inner-content p {
+        width:178px
+    }
+    .road-map-inner-content-rotate2{
+        position: absolute;
+        top: 36%;
+        left: 43%;
+        -webkit-transform: translate(-33%, -50%);
+            -ms-transform: translate(-33%, -50%);
+                transform: translate(-33%, -50%); 
+    }
+    .road-map-inner-content-rotate2 p{
+        color: #0af;
+    }
+    .road-map-inner-content-rotate3{
+        position: absolute;
+        top: 36%;
+        left: 45%;
+        -webkit-transform: translate(-33%, -50%);
+            -ms-transform: translate(-33%, -50%);
+                transform: translate(-33%, -50%);  
+    }
+    .road-map-inner-content-rotate3 p {
+        color: #064c7e;
+    }
+    .road-map-inner-content-rotate4{
+        position: absolute;
+        top: 52%;
+        left: 43%;
+        -webkit-transform: translate(-33%, -50%);
+            -ms-transform: translate(-33%, -50%);
+                transform: translate(-33%, -50%);
+    }
+    .road-map-inner-content-rotate4 p {
+        color: #cc5431;
+    }
+    .box-ani{
+        display: none !important;
+    }
+    .box-mobile-ani-show{
+        display: unset;
+    }
+    .bar-graph {
+        overflow-x: hidden;
+    }
+
+    .one {
+        font-size: 12px;
+    }
+
+    .two {
+        font-size: 12px;
+    }
+
+    .three {
+        font-size: 12px;
+    }
+
+    .four {
+        font-size: 12px;
+    }
+
+    .box-ani {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        padding-left: 0rem !important;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column;
+    }
+    .do-box {
+        width: 270px !important;
+}
+.road-map {
+   left: 0;
+}
+.road-map-rotate{
+    left: auto;
+}
+.road-map-circle {
+    left: 0;
+}
+.do-box:last-child .last-circle{
+    width: 197px;
+}
+.road-map-inner-content-circle{
+    left: 100px;
+}
+.main-banner-company-registration{
+    height: 78rem;
+    /* background: #fff; */
+}
+.registration-form {
+    right: unset;
+}
+.right-cta-registration{
+    width: 80%;
+    -webkit-box-shadow: -18px 4px 70px rgb(0 0 0 / 18%);
+            box-shadow: -18px 4px 70px rgb(0 0 0 / 18%);
+}
+.right-cta-registration-bottom {
+    width: 100%;
+}
+.step-1-line{
+    display: none;
+}
+.description-service .top-nav{
+    display: none;
+}
+.right-side-cta-form-registration{
+    position: unset;
+}
+.cards-accounting-tax{
+    margin-top: 80px;
+}
+.rating-one {
+    border: none;
+}
+.heading-main-company-terms p{
+    margin-top: unset;
+}
+.heading-main-company-privacy p{
+    margin-top: unset;
+}
+.heading-main-company-faqs p{
+    margin-top: unset;   
+}
+.section-padding{
+    margin-top: 90px;
+}
+.my-num{
+    padding: 6px !important;
+}
+#testimonials .testimonial-container .testimonail .text .review{
+    width: 100%;
+    margin-bottom: -60px;
+}
+.cards-accounting-tax{
+    margin-top: 140px;
+}
+.legal-content p {
+    font-size: 15px;
+    font-weight: 500;
+    text-align: center;
+    margin-top: 0px;
+}
+.road-map-start{
+    max-width: 270px;
+    margin: auto;
+}
+.flip-box-area.my-flip{
+    position: relative;
+    text-align: center;
+    color: rgb(0, 0, 0);
+    top: 30px;
+    z-index: 1008;
+}
+.flip-box-area.my-flip2{
+    position: relative;
+    text-align: center;
+    color: rgb(0, 0, 0);
+    z-index: 1005;
+}
+.flip-box-area.my-flip3{
+    position: relative;
+    text-align: center;
+    color: rgb(0, 0, 0);
+    bottom: 33px;
+    z-index: 1003;
+}
+.flip-box-area.my-flip4{
+    position: relative;
+    text-align: center;
+    color: rgb(0, 0, 0);
+    bottom: 130px;
+    z-index: 1002;
+}
+.box-mobile-view{
+    display: block;
+}
+.top-fees-slider{
+    display: none !important;
+}
+.top-fees-slider slick-initialized slick-slider{
+    display: none;
+}
+}
+
+/* only 768 screen size */
+/* @media (max-width: 768px) {
+    .main-banner-company-registration {
+        height: auto;
+    }
+    .right-cta-registration{
+        width: 100%;
+    }
+    #testimonials .testimonial-container .testimonail .text .review{
+        width: 100%;
+    }
+    .road-map-inner-content p {
+        font-size: 8px;
+    }
+    .road-map-inner-content-rotate p{
+        font-size: 8px;
+    }
+    .road-map-inner-content-mid p{
+        font-size: 8px;
+    }
+    .road-map-inner-content-circle p{
+        font-size: 8px;
+        width: 92px;
+    }
+    .road-icon img{
+        margin-left: 19px;
+    }
+} */

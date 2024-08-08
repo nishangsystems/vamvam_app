@@ -6,7 +6,7 @@
 # Node artifact files
 node_modules/
 dist/
-
+.env
 # Compiled Java class files
 *.class
 
@@ -18,7 +18,7 @@ dist/
 
 # Package files
 *.jar
-
+/vendor/*
 # Maven
 target/
 dist/
@@ -47,4 +47,5 @@ Thumbs.db
 *.flv
 *.mov
 *.wmv
+*.env
 
