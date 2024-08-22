@@ -60,3 +60,46 @@ Widget get commonSliderSection => Consumer<BannerProvider>(
             ),
           )
         : SizedBox());
+
+Widget get indexSliderSection => Consumer<BannerProvider>(
+    builder: (context, banner, child) => banner.bannertList.isNotEmpty
+        ? SizedBox(
+      height: ResponsiveHelper.height(context) * 0.24,
+      width: double.infinity,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CarouselSlider.builder(
+              itemCount: banner.bannertList.length,
+              options: CarouselOptions(
+                onPageChanged: (index, position) =>
+                    banner.setActiveIndex(index),
+                viewportFraction: 1,
+                aspectRatio: 16 / 8,
+                animateToClosest: true,
+                autoPlay: true,
+                autoPlayAnimationDuration:
+                const Duration(milliseconds: 800),
+                autoPlayCurve: Curves.easeInOut,
+              ),
+              itemBuilder: (BuildContext context, int itemIndex,
+                  int pageViewIndex) {
+                return Container(
+                  height: 120,
+                  width: ResponsiveHelper.width(context),
+                  padding: EdgeInsets.all(14),
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: FancyShimmerImage(
+                        imageUrl:
+                        '${ApiConstant.baseUrl}/${banner.bannertList[itemIndex].image}',
+                        boxFit: BoxFit.cover,
+                        errorWidget:
+                        Image.asset(ImageResources.bannerImage),
+                      )),
+                );
+              }),
+        ],
+      ),
+    )
+        : SizedBox());

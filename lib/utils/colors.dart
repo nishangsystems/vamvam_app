@@ -34,3 +34,6 @@ const Color vamPrimaryColor = Color(0xff0A2958);
 const Color vamBorderColor = Color.fromRGBO(10, 41, 88, 0.1);
 const Color vamTextColor = Color.fromRGBO(10, 41, 88, 1);
 const Color vamSecondaryColor = Color(0xffFF985B);
+
+const Color vamPrimaryColorLight = Color(0x3b8888b4);
+const Color vamPrimaryColorRed = Color(0x3bad469a);

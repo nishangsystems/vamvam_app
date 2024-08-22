@@ -5,6 +5,7 @@ import 'package:vam_vam/screens/forgotPassword/forgotPasswordResetScreen.dart';
 import 'package:vam_vam/screens/forgotPassword/forgotPasswordScreen.dart';
 import 'package:vam_vam/screens/modules/admin/calendar/repCalender.dart';
 import 'package:vam_vam/screens/modules/admin/complaint/leaderTrackComplaintScreen.dart';
+import 'package:vam_vam/screens/modules/home/home_widget.dart';
 import 'package:vam_vam/screens/modules/admin/home/surveys/addSurveyScreen.dart';
 import 'package:vam_vam/screens/modules/admin/home/surveys/allSurveyScreen.dart';
 import 'package:vam_vam/screens/modules/parent/bottomHomeScreen.dart';
@@ -54,6 +55,10 @@ final GoRouter goRouter = GoRouter(
     GoRoute(
       path: onBoarding,
       builder: (context, state) => const OnBoardingScreen(),
+    ),
+    GoRoute(
+      path: homeScreen,
+      builder: (context, state) => const Index()
     ),
     GoRoute(
       path: login,

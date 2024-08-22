@@ -576,6 +576,50 @@ Widget homeAppbar({
       ),
     );
 
+Widget indexAppbar() => AppBar(
+      backgroundColor: primaryDark,
+      flexibleSpace: Container(
+        height: 290,
+        width: double.infinity,
+        padding:
+            const EdgeInsets.only(top: 60, bottom: 10, left: 16, right: 16),
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage(ImageResources.splashBgImg), fit: BoxFit.fill),
+          borderRadius: BorderRadius.only(bottomRight: Radius.circular(50)),
+          boxShadow: [
+            BoxShadow(color: Colors.white, offset: Offset(1.0, 1.0)),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Image.asset(
+                  ImageResources.logo,
+                  height: 30,
+                  width: 120,
+                  fit: BoxFit.fill,
+                ),
+                IconButton(
+                    onPressed: () {},
+                    icon:
+                        Icon(Icons.search, color: white, size: 30, weight: 5)),
+              ],
+            )
+          ],
+        ),
+      ),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          bottomRight: Radius.circular(50),
+        ),
+      ),
+    );
+
 Widget get dividerContainer => Container(
       width: double.infinity,
       height: 1,

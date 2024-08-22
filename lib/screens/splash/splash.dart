@@ -47,21 +47,22 @@ class _SplashScreenState extends State<SplashScreen>
             .getProfile(auth.getUserId(), reg, rol.roleType, context)
             .then((value) {
           if (value.isSuccess) {
-            if (rol.getRoleType() == getRoleType(RoleEnum.student)) {
-              profile.getStudentProfile(context).then((value) {
-                if (value.isSuccess) {
-                  context.go(userBottomHomeBar);
-                } else {
-                  context.go(role);
-                }
-              });
-            } else if (rol.getRoleType() == getRoleType(RoleEnum.parent)) {
-              context.go(paretnBottomHomeBar);
-            } else if (rol.getRoleType() == getRoleType(RoleEnum.teacher)) {
-              context.go(represantativeBottomHomeBar);
-            } else {
-              context.go(adminBottomHomeBar);
-            }
+            context.go(homeScreen);
+            // if (rol.getRoleType() == getRoleType(RoleEnum.student)) {
+            //   profile.getStudentProfile(context).then((value) {
+            //     if (value.isSuccess) {
+            //       context.go(userBottomHomeBar);
+            //     } else {
+            //       context.go(role);
+            //     }
+            //   });
+            // } else if (rol.getRoleType() == getRoleType(RoleEnum.parent)) {
+            //   context.go(paretnBottomHomeBar);
+            // } else if (rol.getRoleType() == getRoleType(RoleEnum.teacher)) {
+            //   context.go(represantativeBottomHomeBar);
+            // } else {
+            //   context.go(adminBottomHomeBar);
+            // }
           } else {
             context.go(role);
             // context.go(onBoarding);
