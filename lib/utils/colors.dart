@@ -37,3 +37,4 @@ const Color vamSecondaryColor = Color(0xffFF985B);
 
 const Color vamPrimaryColorLight = Color(0x3b8888b4);
 const Color vamPrimaryColorRed = Color(0x3bad469a);
+const Color vamPrimary2 = Color(0xe01d1e7a);

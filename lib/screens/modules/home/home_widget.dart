@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:vam_vam/providers/HomeProvider.dart';
 import 'package:vam_vam/providers/bannerProvider.dart';
 import 'package:vam_vam/providers/roleProvider.dart';
+import 'package:vam_vam/screens/modules/home/featured_schools_widget.dart';
 import 'package:vam_vam/screens/modules/home/previous_schools_widget.dart';
 import 'package:vam_vam/utils/colors.dart';
 import 'package:vam_vam/utils/imageResources.dart';
@@ -63,6 +64,7 @@ class _IndexState extends State<Index> {
             children: [
               indexSliderSection,
               PreviousSchoolsWidget(),
+              FeaturedSchoolsWidget()
             ],
           ),
         )

@@ -1,6 +1,7 @@
 // ignore_for_file: file_names, unnecessary_null_comparison
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bounce/flutter_bounce.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -578,6 +579,8 @@ Widget homeAppbar({
 
 Widget indexAppbar() => AppBar(
       backgroundColor: primaryDark,
+      excludeHeaderSemantics: true,
+     clipBehavior: Clip.antiAlias,
       flexibleSpace: Container(
         height: 290,
         width: double.infinity,
@@ -587,9 +590,6 @@ Widget indexAppbar() => AppBar(
           image: DecorationImage(
               image: AssetImage(ImageResources.splashBgImg), fit: BoxFit.fill),
           borderRadius: BorderRadius.only(bottomRight: Radius.circular(50)),
-          boxShadow: [
-            BoxShadow(color: Colors.white, offset: Offset(1.0, 1.0)),
-          ],
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
