@@ -55,13 +55,17 @@ class _IndexState extends State<Index> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: white,
+        extendBodyBehindAppBar: true,
         appBar: PreferredSize(
             preferredSize: Size.fromHeight(appBarHeight),
-            child: indexAppbar(),
+            child: indexAppbar(context),
         ),
         body: SingleChildScrollView(
           child: Column(
             children: [
+              SizedBox(
+                height: 145,
+              ),
               indexSliderSection,
               PreviousSchoolsWidget(),
               FeaturedSchoolsWidget()

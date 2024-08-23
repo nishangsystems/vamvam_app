@@ -14,6 +14,7 @@ import 'package:vam_vam/screens/modules/representative/complaintStatus/complaint
 import 'package:vam_vam/screens/modules/representative/complaintStatus/repTrackComplaintScreen.dart';
 import 'package:vam_vam/screens/modules/representative/complaintStatus/repUpdateComplaintScreen.dart';
 import 'package:vam_vam/screens/modules/representative/events/eventScreen.dart';
+import 'package:vam_vam/screens/modules/search/search_widget.dart';
 import 'package:vam_vam/screens/modules/user/complaintStatus/complaintStatusScreen.dart';
 import 'package:vam_vam/screens/modules/user/complaintStatus/reviewComplaintScreen.dart';
 import 'package:vam_vam/screens/modules/user/events/eventScreen.dart';
@@ -90,6 +91,11 @@ final GoRouter goRouter = GoRouter(
     GoRoute(
       path: repbookAppointment,
       builder: (context, state) => const RepBookAppointmentScreen(),
+    ),
+
+    GoRoute(
+      path: searchScreen,
+      builder: (context, state) => const SearchWidget()
     ),
 
 // GoRoute(

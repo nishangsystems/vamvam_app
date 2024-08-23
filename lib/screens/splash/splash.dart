@@ -46,7 +46,9 @@ class _SplashScreenState extends State<SplashScreen>
         profile
             .getProfile(auth.getUserId(), reg, rol.roleType, context)
             .then((value) {
+              print("profile value ${value}");
           if (value.isSuccess) {
+            print("value success: ${value.isSuccess}");
             context.go(homeScreen);
             // if (rol.getRoleType() == getRoleType(RoleEnum.student)) {
             //   profile.getStudentProfile(context).then((value) {

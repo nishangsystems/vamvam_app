@@ -15,6 +15,7 @@ import 'package:vam_vam/providers/locationMapProvider.dart';
 import 'package:vam_vam/providers/parentProvider.dart';
 import 'package:vam_vam/providers/profileprovider.dart';
 import 'package:vam_vam/providers/roleProvider.dart';
+import 'package:vam_vam/screens/modules/search/search_widget.dart';
 import 'package:vam_vam/utils/fontConstant.dart';
 import 'package:vam_vam/utils/paddingConstant.dart';
 import 'package:vam_vam/widgets/commonWidgets/textStyle.dart';
@@ -577,7 +578,7 @@ Widget homeAppbar({
       ),
     );
 
-Widget indexAppbar() => AppBar(
+Widget indexAppbar(context) => AppBar(
       backgroundColor: primaryDark,
       excludeHeaderSemantics: true,
      clipBehavior: Clip.antiAlias,
@@ -605,7 +606,10 @@ Widget indexAppbar() => AppBar(
                   fit: BoxFit.fill,
                 ),
                 IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                       Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => SearchWidget()));
+                    },
                     icon:
                         Icon(Icons.search, color: white, size: 30, weight: 5)),
               ],
@@ -619,6 +623,77 @@ Widget indexAppbar() => AppBar(
         ),
       ),
     );
+
+Widget searchAppbar(textController) => AppBar(
+  backgroundColor: primaryDark,
+  excludeHeaderSemantics: true,
+  clipBehavior: Clip.antiAlias,
+  foregroundColor: white,
+  centerTitle: true,
+  flexibleSpace: Container(
+    height: 240,
+    width: double.infinity,
+    padding: const EdgeInsets.only(top: 30, bottom: 0, left: 16, right: 16),
+    decoration: const BoxDecoration(
+      image: DecorationImage(
+          image: AssetImage(ImageResources.splashBgImg), fit: BoxFit.fill),
+      borderRadius: BorderRadius.only(bottomRight: Radius.circular(40),
+      bottomLeft: Radius.circular(40)
+      ),
+    ),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Center(
+          child:Image.asset(
+            ImageResources.logo,
+            height: 30,
+            width: 120,
+            fit: BoxFit.fill,
+          ),
+        ),
+        SizedBox(height: 25),
+        TextField(
+          controller: textController,
+          onChanged: (value) {
+            //Do something wi
+            print("searched input");
+          },
+          decoration: InputDecoration(
+            prefixIcon: const Icon(
+              Icons.search,
+              color: textColor2,
+            ),
+            filled: true,
+            fillColor: Colors.white,
+            hintText: "search a school",
+            hintStyle: const TextStyle(color: Colors.grey),
+            contentPadding:
+            const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+            border: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(15.0)),
+            ),
+            enabledBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.white, width: 1.0),
+              borderRadius: BorderRadius.all(Radius.circular(15.0)),
+            ),
+            focusedBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.white, width: 2.0),
+              borderRadius: BorderRadius.all(Radius.circular(15.0)),
+            ),
+          ),
+        ),
+      ],
+    ),
+  ),
+  shape: const RoundedRectangleBorder(
+    borderRadius: BorderRadius.only(
+      bottomRight: Radius.circular(40),
+      bottomLeft: Radius.circular(40)
+    ),
+  ),
+);
 
 Widget get dividerContainer => Container(
       width: double.infinity,

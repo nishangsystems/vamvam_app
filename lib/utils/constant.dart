@@ -8,6 +8,7 @@ const String splash = '/';
 const String onBoarding = '/onBoarding';
 const String login = '/login';
 const String homeScreen = '/home';
+const String searchScreen = '/search';
 const String verifyOTP = '/verifyOTP';
 const String locationMapScreen = '/locationMapScreen';
 const String addComplain = '/addComplain';

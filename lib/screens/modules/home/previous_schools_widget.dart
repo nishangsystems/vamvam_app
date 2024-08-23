@@ -29,10 +29,6 @@ class PreviousSchoolsWidget extends StatelessWidget {
                 'Your Previous Schools',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              // TextButton(
-              //   onPressed: () {},
-              //   child: Text('See all'),
-              // ),
             ],
           ),
         ),
