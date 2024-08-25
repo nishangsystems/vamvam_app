@@ -24,6 +24,11 @@ class _FeaturedSchoolsWidgetState extends State<FeaturedSchoolsWidget> {
   void updateSchoolList() {
     List schools = widget.schools;
 
+    // get the first 10 schools
+    if (schools.length > 10) {
+      schools = schools.sublist(0, 10);
+    }
+
     for (var school in schools) {
       schoolList.add(School(
           name: school['name'],

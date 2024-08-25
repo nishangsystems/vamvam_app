@@ -25,8 +25,11 @@ class SearchSchoolCard extends StatelessWidget {
           SizedBox(
               width: 40,
               height: 40,
-              child: Image(
-                image: school.color == 'pink' ? AssetImage(ImageResources.vmschoolPlaceholder2) : AssetImage(ImageResources.vmschoolPlaceholder),
+              child: FadeInImage(
+                placeholder: school.color == 'pink' ? AssetImage(ImageResources.vmschoolPlaceholder2) : AssetImage(ImageResources.vmschoolPlaceholder),
+                image: NetworkImage(
+                  school.logo_path!,
+                ),
                 fit: BoxFit.contain,
               )
           ),
