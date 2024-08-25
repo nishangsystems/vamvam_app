@@ -5,7 +5,7 @@ import 'package:vam_vam/data/model/response/schoolModel.dart';
 import 'package:vam_vam/providers/schoolsProvider.dart';
 import 'package:vam_vam/screens/modules/search/search_list_widget.dart';
 import 'package:vam_vam/utils/colors.dart';
-import 'package:vam_vam/widgets/commonWidgets/commonWidgets.dart';
+import 'package:vam_vam/utils/imageResources.dart';
 
 class SearchWidget extends StatefulWidget {
   const SearchWidget({Key? key}) : super(key: key);
@@ -16,33 +16,43 @@ class SearchWidget extends StatefulWidget {
 
 class _SearchWidgetState extends State<SearchWidget> {
   TextEditingController textController = TextEditingController();
-  
+  List<School> allSchools = [];
+  List<School> filteredSchools = [];
+  bool searching = false;
+
   @override
   void initState() {
     super.initState();
     Future.microtask(() => _init());
   }
 
-  _init() {
-    Provider.of<SchoolsProvider>(context, listen: false).getSchools();
+  _init() async {
+    var provider = Provider.of<SchoolsProvider>(context, listen: false);
+    await provider.getSchools();
+    setState(() {
+      allSchools = formattedSchools(provider.schools);
+      filteredSchools = allSchools; // Initially, display all schools
+    });
   }
 
-  List formattedSchools(schools) {
-    List allSchools = [];
-
-    for (var school in schools) {
-      allSchools.add(School(
-        name: school['name'],
-        location: null,
-        color: 'grey',
-        api_root: school['api_root'],
-        logo_path: school['logo_path'],
-      ));
-    }
-
-    return allSchools;
+  List<School> formattedSchools(List schools) {
+    return schools.map((school) => School(
+      name: school['name'],
+      location: null,
+      color: 'grey',
+      api_root: school['api_root'],
+      logo_path: school['logo_path'],
+    )).toList();
   }
 
+  void _filterSchools(String query) {
+    setState(() {
+      searching = query.isNotEmpty;
+      filteredSchools = allSchools.where((school) {
+        return school.name.toLowerCase().contains(query.toLowerCase());
+      }).toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,9 +71,85 @@ class _SearchWidgetState extends State<SearchWidget> {
             );
           }
 
-          return SearchListWidget(schools: formattedSchools(provider.schools), searching: false,);
+          return SearchListWidget(
+            schools: filteredSchools,
+            searching: searching,
+            searchTerm: textController.text,
+          );
         },
       ),
     );
   }
+
+  Widget searchAppbar(textController) => AppBar(
+    backgroundColor: primaryDark,
+    excludeHeaderSemantics: true,
+    clipBehavior: Clip.antiAlias,
+    foregroundColor: white,
+    centerTitle: true,
+    flexibleSpace: Container(
+      height: 240,
+      width: double.infinity,
+      padding: const EdgeInsets.only(top: 30, bottom: 0, left: 16, right: 16),
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+            image: AssetImage(ImageResources.splashBgImg), fit: BoxFit.fill),
+        borderRadius: BorderRadius.only(bottomRight: Radius.circular(40),
+            bottomLeft: Radius.circular(40)
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Center(
+            child:Image.asset(
+              ImageResources.logo,
+              height: 30,
+              width: 120,
+              fit: BoxFit.fill,
+            ),
+          ),
+          SizedBox(height: 25),
+          TextField(
+            controller: textController,
+            onChanged: (value) {
+              _filterSchools(value);
+              print("searched input");
+            },
+            decoration: InputDecoration(
+              prefixIcon: const Icon(
+                Icons.search,
+                color: textColor2,
+              ),
+              filled: true,
+              fillColor: Colors.white,
+              hintText: "search a school",
+              hintStyle: const TextStyle(color: Colors.grey),
+              contentPadding:
+              const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+              border: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15.0)),
+              ),
+              enabledBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.white, width: 1.0),
+                borderRadius: BorderRadius.all(Radius.circular(15.0)),
+              ),
+              focusedBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.white, width: 2.0),
+                borderRadius: BorderRadius.all(Radius.circular(15.0)),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.only(
+          bottomRight: Radius.circular(40),
+          bottomLeft: Radius.circular(40)
+      ),
+    ),
+  );
+
 }
