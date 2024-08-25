@@ -2,9 +2,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vam_vam/data/model/response/schoolModel.dart';
 import 'package:vam_vam/providers/HomeProvider.dart';
 import 'package:vam_vam/providers/bannerProvider.dart';
 import 'package:vam_vam/providers/roleProvider.dart';
+import 'package:vam_vam/providers/schoolsProvider.dart';
 import 'package:vam_vam/screens/modules/home/featured_schools_widget.dart';
 import 'package:vam_vam/screens/modules/home/previous_schools_widget.dart';
 import 'package:vam_vam/utils/colors.dart';
@@ -32,6 +34,7 @@ class _IndexState extends State<Index> {
     var banner = Provider.of<BannerProvider>(context, listen: false);
     var home = Provider.of<HomeProvider>(context, listen: false);
     var role = Provider.of<RoleProvider>(context, listen: false);
+    var school = Provider.of<SchoolsProvider>(context, listen: false);
     // var profile = Provider.of<ProfileProvider>(context, listen: false);
     // var register = Provider.of<RegisterProvider>(context, listen: false);
     // var auth = Provider.of<AuthProvider>(context, listen: false);
@@ -46,6 +49,7 @@ class _IndexState extends State<Index> {
     //   });
     // });
     home.startLoader(true);
+    school.getSchools();
     banner
         .getBanner(role.roleType, context)
         .then((value) => home.startLoader(false));
@@ -60,17 +64,29 @@ class _IndexState extends State<Index> {
             preferredSize: Size.fromHeight(appBarHeight),
             child: indexAppbar(context),
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 145,
+        body: Consumer<SchoolsProvider> (
+          builder: (context, data, child) {
+            if (data.isLoading) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+
+            print("schools data: ${data.schools}");
+
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 145,
+                  ),
+                  indexSliderSection,
+                  PreviousSchoolsWidget(),
+                  FeaturedSchoolsWidget(schools: data.schools)
+                ],
               ),
-              indexSliderSection,
-              PreviousSchoolsWidget(),
-              FeaturedSchoolsWidget()
-            ],
-          ),
+            );
+          }
         )
     );
   }

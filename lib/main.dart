@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:vam_vam/data/repo/schoolRepo.dart';
 import 'package:vam_vam/providers/courseProvider.dart';
 import 'package:vam_vam/providers/masterProvider.dart';
 import 'package:vam_vam/providers/parentProvider.dart';
@@ -29,6 +30,7 @@ import 'package:vam_vam/providers/onBoardingProvider.dart';
 import 'package:vam_vam/providers/profileprovider.dart';
 import 'package:vam_vam/providers/registerProvider.dart';
 import 'package:vam_vam/providers/roleProvider.dart';
+import 'package:vam_vam/providers/schoolsProvider.dart';
 import 'package:vam_vam/providers/settingProvider.dart';
 import 'package:vam_vam/providers/splashProvider.dart';
 import 'package:vam_vam/providers/toDoProvider.dart';
@@ -59,6 +61,8 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => di.sl<SchoolsProvider>()),
+        // Provider<SchoolRepo>(create: (_) => SchoolRepo(dioClient: di.sl(), prefs: di.sl())),
         ChangeNotifierProvider(create: (context) => di.sl<SplashProvider>()),
         ChangeNotifierProvider(
             create: (context) => di.sl<OnBoardingProvider>()),

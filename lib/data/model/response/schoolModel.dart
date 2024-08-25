@@ -1,11 +1,14 @@
 class School {
   final String name;
-  final String location;
-  final String color;
+  String? location;
+  String? color;
+  String? logo_path;
+  String? api_root;
 
-  School({
-    required this.name,
-    required this.location,
-    required this.color,
-  });
+  School(
+      {required this.name,
+      this.location,
+      this.color,
+      this.logo_path,
+      this.api_root});
 }

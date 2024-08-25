@@ -42,9 +42,11 @@ class SearchSchoolCard extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 2),
-          Text(
-            school.location,
+          if (school.location != null)
+            SizedBox(height: 2),
+          if (school.location != null)
+            Text(
+            school.location!,
             style: TextStyle(color: textColor2,
               fontSize: 10,
             ),

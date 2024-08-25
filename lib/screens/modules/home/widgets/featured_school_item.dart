@@ -17,8 +17,11 @@ class FeaturedSchoolItem extends StatelessWidget {
           SizedBox(
               width: 50,
               height: 50,
-              child: Image(
-                image: school.color == 'pink' ? AssetImage(ImageResources.vmschoolPlaceholder2) : AssetImage(ImageResources.vmschoolPlaceholder),
+              child: FadeInImage(
+                placeholder: school.color == 'pink' ? AssetImage(ImageResources.vmschoolPlaceholder2) : AssetImage(ImageResources.vmschoolPlaceholder),
+                image: NetworkImage(
+                  school.logo_path!,
+                ),
                 fit: BoxFit.contain,
               )
           ),
@@ -35,9 +38,11 @@ class FeaturedSchoolItem extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                SizedBox(height: 4),
-                Text(
-                  school.location,
+                if (school.location != null)
+                  SizedBox(height: 4),
+                if (school.location != null)
+                  Text(
+                  school.location!,
                   style: TextStyle(color: textColor2,
                     fontSize: 10
                   ),
@@ -48,7 +53,10 @@ class FeaturedSchoolItem extends StatelessWidget {
           SizedBox(width: 16),
           ElevatedButton(
 
-            onPressed: () {},
+            onPressed: () {
+              print('Login button pressed');
+              print("school clicked: $school");
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: vamPrimary2,
               shape: RoundedRectangleBorder(

@@ -42,15 +42,17 @@ class PreviousSchoolCard extends StatelessWidget {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
-          SizedBox(height: 4),
-          Text(
-            school.location,
-            style: TextStyle(color: textColor2,
-              fontSize: 10,
+          if (school.location != null)
+            SizedBox(height: 4),
+          if (school.location != null)
+            Text(
+              school.location!,
+              style: TextStyle(color: textColor2,
+                fontSize: 10,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
           // SizedBox(height: 4)
         ],
       ),

@@ -5,6 +5,10 @@ class ApiConstant {
   // static const String baseUrl1 = 'https://bnb.stlouissystems.org';
   static const String baseUrl1 = 'https://bnb.stlouissystems.org';
 
+  static const String baseUrl2 = 'https://vamvam.nishangsystems.org';
+
+  static const String getSchools = '/api/schools';
+
   // User api
   static const String getReleation = '/api/user/relation';
   static const String getState = '/api/user/state';

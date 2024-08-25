@@ -2,21 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:vam_vam/data/model/response/schoolModel.dart';
 import 'package:vam_vam/screens/modules/home/widgets/featured_school_item.dart';
 
-class FeaturedSchoolsWidget extends StatelessWidget {
-  final List<School> schools = [
-    School(name: 'Catholic University', location: 'Buea, Checkpoint', color: 'purple'),
-    School(name: 'Catholic University', location: 'Buea, Checkpoint', color: 'purple'),
-    School(name: 'Catholic University', location: 'Buea, Checkpoint', color: 'purple'),
-    School(name: 'Catholic University', location: 'Buea, Checkpoint', color: 'purple'),
-    School(name: 'Catholic University', location: 'Buea, Checkpoint', color: 'purple'),
-    School(name: 'Catholic University', location: 'Buea, Checkpoint', color: 'purple'),
-    School(name: 'Catholic University', location: 'Buea, Checkpoint', color: 'purple'),
-    School(name: 'Catholic University', location: 'Buea, Checkpoint', color: 'purple'),
-    School(name: 'Catholic University', location: 'Buea, Checkpoint', color: 'purple'),
-    School(name: 'Catholic University', location: 'Buea, Checkpoint', color: 'purple'),
-  ];
+class FeaturedSchoolsWidget extends StatefulWidget {
+  final List schools;
 
-  FeaturedSchoolsWidget({super.key});
+  FeaturedSchoolsWidget({required this.schools});
+
+  @override
+  _FeaturedSchoolsWidgetState createState() => _FeaturedSchoolsWidgetState();
+}
+
+class _FeaturedSchoolsWidgetState extends State<FeaturedSchoolsWidget> {
+  List schoolList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    updateSchoolList();
+  }
+
+  // add other data to the schools list
+  void updateSchoolList() {
+    List schools = widget.schools;
+
+    for (var school in schools) {
+      schoolList.add(School(
+          name: school['name'],
+          location: null,
+          color: 'purple',
+          api_root: school['api_root'],
+          logo_path: school['logo_path']));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,19 +41,22 @@ class FeaturedSchoolsWidget extends StatelessWidget {
       // mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 14.0, bottom: 8.0),
-          child:Text(
+          padding: const EdgeInsets.only(
+              left: 16.0, right: 16.0, top: 14.0, bottom: 8.0),
+          child: Text(
             'Featured Schools',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
         ),
         ListView.builder(
-          physics: NeverScrollableScrollPhysics(), // Prevent scrolling within the list
-          shrinkWrap: true, // Required to make ListView work within a Column
-          itemCount: schools.length,
+          physics: NeverScrollableScrollPhysics(),
+          // Prevent scrolling within the list
+          shrinkWrap: true,
+          // Required to make ListView work within a Column
+          itemCount: schoolList.length,
           padding: EdgeInsets.symmetric(horizontal: 4.0),
           itemBuilder: (context, index) {
-            return FeaturedSchoolItem(school: schools[index]);
+            return FeaturedSchoolItem(school: schoolList[index]);
           },
         ),
       ],
