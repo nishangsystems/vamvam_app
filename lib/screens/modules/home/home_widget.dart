@@ -39,8 +39,10 @@ class _IndexState extends State<Index> with WidgetsBindingObserver {
     var school = Provider.of<SchoolsProvider>(context, listen: false);
     // var profile = Provider.of<ProfileProvider>(context, listen: false);
 
+    role.getRoleType();
     home.startLoader(true);
     school.getSchools();
+    school.getPreviousSchools();
     banner
         .getBanner(role.roleType, context)
         .then((value) => home.startLoader(false));
@@ -93,7 +95,8 @@ class _IndexState extends State<Index> with WidgetsBindingObserver {
                     height: 145,
                   ),
                   indexSliderSection,
-                  PreviousSchoolsWidget(),
+                  if (data.previousSchools.isNotEmpty)
+                    PreviousSchoolsWidget(schools: data.previousSchools, auth: auth, role: role),
                   FeaturedSchoolsWidget(schools: data.schools, auth: auth, role: role)
                 ],
               ),

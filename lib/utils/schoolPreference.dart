@@ -27,9 +27,17 @@ class SchoolPreference {
   // save previous logged in school
   static Future<void> saveSchool(School school) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? previousSchools = prefs.getStringList('previousSchools') ?? [];
+
+
     String schoolJson = jsonEncode(school.toJson()); // Convert to JSON string
     print("saving selected school: $schoolJson");
+
+    previousSchools.remove(schoolJson);
+    previousSchools.insert(0, schoolJson);
+
     await prefs.setString('school', schoolJson);
+    await prefs.setStringList('previousSchools', previousSchools);
   }
 
   // get previous logged in school
@@ -41,6 +49,21 @@ class SchoolPreference {
     }
     return null;
   }
+
+  // Get the list of previous schools
+  static Future<List<School>> getPreviousSchools() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? previousSchoolsJson = prefs.getStringList('previousSchools') ?? [];
+
+    List<School> previousSchools = previousSchoolsJson
+        .map((schoolJson) => School.fromJson(jsonDecode(schoolJson)))
+        .toList();
+
+    print("getting previous schools: $previousSchools");
+
+    return previousSchools;
+  }
+
 }
 
 // void onSchoolSelected(School selectedSchool) async {

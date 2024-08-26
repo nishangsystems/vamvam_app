@@ -4,6 +4,7 @@ import 'package:vam_vam/data/model/base/apiResponse.dart';
 import 'package:vam_vam/data/model/base/responseModel.dart';
 import 'package:vam_vam/data/model/response/schoolModel.dart';
 import 'package:vam_vam/data/repo/schoolRepo.dart';
+import 'package:vam_vam/utils/schoolPreference.dart';
 
 class SchoolsProvider extends ChangeNotifier {
   final SchoolRepo schoolRepo;
@@ -15,6 +16,9 @@ class SchoolsProvider extends ChangeNotifier {
 
   List _schools = [];
   List get schools => _schools;
+
+  List _previousSchools = [];
+  List get previousSchools => _previousSchools;
 
   startLoader(bool value) {
     _isLoading = value;
@@ -47,6 +51,11 @@ class SchoolsProvider extends ChangeNotifier {
     startLoader(false);
     notifyListeners();
     return data;
+  }
+
+  // get previous schools
+  Future<void> getPreviousSchools() async {
+    _previousSchools = await SchoolPreference.getPreviousSchools();
   }
 
   // fetch all schools and get one by name
