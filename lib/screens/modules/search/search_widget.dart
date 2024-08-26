@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vam_vam/data/model/response/schoolModel.dart';
+import 'package:vam_vam/providers/AuthProvider.dart';
+import 'package:vam_vam/providers/roleProvider.dart';
 import 'package:vam_vam/providers/schoolsProvider.dart';
 import 'package:vam_vam/screens/modules/search/search_list_widget.dart';
 import 'package:vam_vam/utils/colors.dart';
@@ -63,8 +65,8 @@ class _SearchWidgetState extends State<SearchWidget> {
         preferredSize: const Size.fromHeight(145),
         child: searchAppbar(textController),
       ),
-      body: Consumer<SchoolsProvider>(
-        builder: (context, provider, child) {
+      body: Consumer3<SchoolsProvider, AuthProvider, RoleProvider>(
+        builder: (context, provider, auth, role, child) {
           if (provider.isLoading) {
             return Center(
               child: CircularProgressIndicator(),
@@ -75,6 +77,8 @@ class _SearchWidgetState extends State<SearchWidget> {
             schools: filteredSchools,
             searching: searching,
             searchTerm: textController.text,
+            auth: auth,
+            role: role
           );
         },
       ),

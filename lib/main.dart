@@ -37,6 +37,7 @@ import 'package:vam_vam/providers/toDoProvider.dart';
 import 'package:vam_vam/screens/notification/PushNotificationsManager.dart';
 import 'package:vam_vam/utils/colors.dart';
 import 'package:vam_vam/utils/fontConstant.dart';
+import 'package:vam_vam/utils/schoolPreference.dart';
 import 'package:vam_vam/widgets/route/goRoute.dart';
 import 'diContainer.dart' as di;
 import 'http.dart';
@@ -62,7 +63,6 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => di.sl<SchoolsProvider>()),
-        // Provider<SchoolRepo>(create: (_) => SchoolRepo(dioClient: di.sl(), prefs: di.sl())),
         ChangeNotifierProvider(create: (context) => di.sl<SplashProvider>()),
         ChangeNotifierProvider(
             create: (context) => di.sl<OnBoardingProvider>()),
@@ -109,6 +109,7 @@ void main() async {
 
 _init() async {
   WidgetsFlutterBinding.ensureInitialized();
+  loadSchoolApiRoot();
   await di.init();
 
   // Flutter Downloader

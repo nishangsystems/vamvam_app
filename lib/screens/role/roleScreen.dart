@@ -12,7 +12,8 @@ import 'package:vam_vam/utils/fontConstant.dart';
 import 'package:vam_vam/utils/imageResources.dart';
 
 class RoleScreen extends StatefulWidget {
-  const RoleScreen({super.key});
+  final String schoolName;
+  RoleScreen({super.key, required this.schoolName});
 
   @override
   State<RoleScreen> createState() => _RoleScreenState();
@@ -66,7 +67,7 @@ class _RoleScreenState extends State<RoleScreen> {
                       onTap: () {
                         auth.setType('mobile');
                         data.setRoleType(getRoleType(RoleEnum.student));
-                        context.push(login);
+                        context.push('$login/${widget.schoolName}');
                       }),
                   SizedBox(
                     height: 10,
@@ -79,7 +80,7 @@ class _RoleScreenState extends State<RoleScreen> {
                       onTap: () {
                         auth.setType('mobile');
                         data.setRoleType(getRoleType(RoleEnum.teacher));
-                        context.push(login);
+                        context.push('$login/${widget.schoolName}');
                       }),
                   SizedBox(
                     height: 10,
@@ -91,7 +92,7 @@ class _RoleScreenState extends State<RoleScreen> {
                       onTap: () {
                         auth.setType('mobile');
                         data.setRoleType(getRoleType(RoleEnum.parent));
-                        context.push(login);
+                        context.push('$login/${widget.schoolName}');
                       }),
                   SizedBox(
                     height: 10,
@@ -103,7 +104,7 @@ class _RoleScreenState extends State<RoleScreen> {
                       onTap: () {
                         auth.setType('mobile');
                         data.setRoleType(getRoleType(RoleEnum.leader));
-                        context.push(login);
+                        context.push('$login/${widget.schoolName}');
                       }),
                   // SizedBox(
                   //   height: 50,

@@ -4,8 +4,10 @@ import 'package:vam_vam/screens/modules/home/widgets/featured_school_item.dart';
 
 class FeaturedSchoolsWidget extends StatefulWidget {
   final List schools;
+  final auth;
+  final role;
 
-  FeaturedSchoolsWidget({required this.schools});
+  FeaturedSchoolsWidget({required this.schools, required this.auth, required this.role});
 
   @override
   _FeaturedSchoolsWidgetState createState() => _FeaturedSchoolsWidgetState();
@@ -61,7 +63,8 @@ class _FeaturedSchoolsWidgetState extends State<FeaturedSchoolsWidget> {
           itemCount: schoolList.length,
           padding: EdgeInsets.symmetric(horizontal: 4.0),
           itemBuilder: (context, index) {
-            return FeaturedSchoolItem(school: schoolList[index]);
+            return FeaturedSchoolItem(
+                school: schoolList[index], auth: widget.auth, role: widget.role);
           },
         ),
       ],

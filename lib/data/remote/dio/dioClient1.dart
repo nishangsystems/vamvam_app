@@ -22,12 +22,12 @@ class DioClient1 {
     this.loggingInterceptor,
     this.sharedPreferences,
   }) {
-    if (sharedPreferences!.containsKey(ApiConstant.keyUserId1)) {
-      id = sharedPreferences!.getString(ApiConstant.keyUserId1)!;
+    if (sharedPreferences!.containsKey(ApiConstant.keyUserId)) {
+      id = sharedPreferences!.getString(ApiConstant.keyUserId)!;
       debugPrint('USER_ID>> $id');
     }
-    if (sharedPreferences!.containsKey(ApiConstant.keyToken1)) {
-      token = sharedPreferences!.getString(ApiConstant.keyToken1)!;
+    if (sharedPreferences!.containsKey(ApiConstant.keyToken)) {
+      token = sharedPreferences!.getString(ApiConstant.keyToken)!;
       debugPrint("USER_TOKEN>> $token");
     }
 
@@ -53,7 +53,10 @@ class DioClient1 {
     CancelToken? cancelToken,
     ProgressCallback? onReceiveProgress,
   }) async {
-    debugPrint('BASE___URL>>>>> $baseUrl');
+    dio.options.baseUrl = ApiConstant.currentSchoolUrl;
+    // debugPrint('MAIN___BASE___URL>>>>> $baseUrl');
+    debugPrint('MAIN___BASE___URL>>>>> ${dio.options.baseUrl}');
+
     try {
       var response = await dio.get(
         uri,
@@ -83,7 +86,9 @@ class DioClient1 {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    debugPrint('BASE___URL>>>>> $baseUrl');
+    dio.options.baseUrl = ApiConstant.currentSchoolUrl;
+    // debugPrint('MAIN___BASE___URL>>>>> $baseUrl');
+    debugPrint('MAIN___BASE___URL>>>>> ${dio.options.baseUrl}');
     try {
       var response = await dio.post(
         uri,
@@ -111,6 +116,9 @@ class DioClient1 {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
+    dio.options.baseUrl = ApiConstant.currentSchoolUrl;
+    // debugPrint('MAIN___BASE___URL>>>>> $baseUrl');
+    debugPrint('MAIN___BASE___URL>>>>> ${dio.options.baseUrl}');
     try {
       var response = await dio.put(
         uri,
@@ -136,6 +144,9 @@ class DioClient1 {
     Options? options,
     CancelToken? cancelToken,
   }) async {
+    dio.options.baseUrl = ApiConstant.currentSchoolUrl;
+    // debugPrint('MAIN___BASE___URL>>>>> $baseUrl');
+    debugPrint('MAIN___BASE___URL>>>>> ${dio.options.baseUrl}');
     try {
       var response = await dio.delete(
         uri,

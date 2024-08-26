@@ -1,15 +1,66 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vam_vam/data/model/response/schoolModel.dart';
+import 'package:vam_vam/helpers/enumHelper.dart';
+import 'package:vam_vam/providers/AuthProvider.dart';
+import 'package:vam_vam/providers/roleProvider.dart';
 import 'package:vam_vam/screens/modules/search/widgets/search_school_card.dart';
+import 'package:vam_vam/utils/apiConstant.dart';
+import 'package:vam_vam/utils/constant.dart';
+import 'package:vam_vam/utils/schoolPreference.dart';
 
-class SearchListWidget extends StatelessWidget {
+class SearchListWidget extends StatefulWidget {
   final List schools;
   final bool searching;
   String? searchTerm = '';
+  final AuthProvider auth;
+  final RoleProvider role;
 
   SearchListWidget({required this.schools, required this.searching,
-    this.searchTerm
+    this.searchTerm, required this.auth, required this.role
   });
+
+  @override
+  _SearchListWidgetState createState() => _SearchListWidgetState();
+}
+
+class _SearchListWidgetState extends State<SearchListWidget> {
+  School? cSchool;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSchool();
+  }
+
+  void _loadSchool() async {
+    School? school = await SchoolPreference.getSchool();
+    setState(() {
+      cSchool = school!;
+    });
+  }
+
+  bool checkIfLoggedInAndSchoolIsCurrent(School school)  {
+    if (widget.auth.isLoggedIn()) {
+      if (cSchool != null && cSchool!.name == school.name) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  void goToUserDashboard(BuildContext context) {
+    // go to user dashboard based on role type
+    if (widget.role.roleType == getRoleType(RoleEnum.student)) {
+      context.push(userBottomHomeBar);
+    } else if (widget.role.roleType == getRoleType(RoleEnum.teacher)) {
+      context.push(represantativeBottomHomeBar);
+    } else if (widget.role.roleType == getRoleType(RoleEnum.parent)) {
+      context.push(paretnBottomHomeBar);
+    } else {
+      context.push(represantativeBottomHomeBar);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,15 +70,15 @@ class SearchListWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (!schools.isEmpty)
-              searchText(searchTerm: searchTerm),
-            if (!schools.isEmpty)
+            if (!widget.schools.isEmpty)
+              searchText(searchTerm: widget.searchTerm),
+            if (!widget.schools.isEmpty)
               SizedBox(height: 16),
-            if (schools.isEmpty)
+            if (widget.schools.isEmpty)
               Center(
                 child: noSchoolsFound(),
               ),
-            if (schools.isNotEmpty)
+            if (widget.schools.isNotEmpty)
               GridView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
@@ -37,13 +88,23 @@ class SearchListWidget extends StatelessWidget {
                   mainAxisSpacing: 14,
                   childAspectRatio: 0.85,
                 ),
-                itemCount: schools.length,
+                itemCount: widget.schools.length,
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () {
-                      print('School clicked: ${schools[index].toJson()}');
+                      print('Login button pressed');
+                      print("school clicked: ${widget.schools[index].toJson()}");
+                      ApiConstant.setCurrentSchoolUrl(widget.schools[index].toJson()['api_root']);
+
+                      if (checkIfLoggedInAndSchoolIsCurrent(widget.schools[index]) == true) {
+
+                        goToUserDashboard(context);
+
+                      } else {
+                        context.push('/role/${widget.schools[index].name}');
+                      }
                     },
-                    child: SearchSchoolCard(school: schools[index]),
+                    child: SearchSchoolCard(school: widget.schools[index]),
                   );
                 },
               )
@@ -82,7 +143,7 @@ class SearchListWidget extends StatelessWidget {
 
   // searchText widget
   Widget searchText({String? searchTerm}) {
-    return searching ? Text(
+    return widget.searching ? Text(
       'Search Results for "${searchTerm}"',
       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
     ): Text(

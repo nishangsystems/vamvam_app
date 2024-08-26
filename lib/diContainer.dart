@@ -59,49 +59,54 @@ final sl = GetIt.instance;
 
 Future<void> init() async {
   // Dio instances
-  sl.registerLazySingleton<Dio>(() => Dio(), instanceName: 'dio1');
+  // sl.registerLazySingleton<Dio>(() => Dio(), instanceName: 'dio1');
   sl.registerLazySingleton<Dio>(() => Dio(), instanceName: 'dio2');
   sl.registerLazySingleton<Dio>(() => Dio(), instanceName: 'dio3');
 
   // Core
-  sl.registerLazySingleton(() => DioClient(
-      ApiConstant.baseUrl, sl<Dio>(instanceName: 'dio1'),
+  // sl.registerLazySingleton(() => DioClient(
+  //     ApiConstant.baseUrl, sl<Dio>(instanceName: 'dio1'),
+  //     loggingInterceptor: sl(), sharedPreferences: sl()));
+  // sl.registerLazySingleton(() => DioClient1(
+  //     ApiConstant.currentSchoolUrl, sl<Dio>(instanceName: 'dio2'),
+  //     loggingInterceptor: sl(), sharedPreferences: sl()));
+
+  sl.registerFactory(() => DioClient1(
+      ApiConstant.currentSchoolUrl, sl<Dio>(instanceName: 'dio2'),
       loggingInterceptor: sl(), sharedPreferences: sl()));
-  sl.registerLazySingleton(() => DioClient1(
-      ApiConstant.baseUrl1, sl<Dio>(instanceName: 'dio2'),
-      loggingInterceptor: sl(), sharedPreferences: sl()));
+
   sl.registerLazySingleton(() => DioClient3(
       ApiConstant.baseUrl2, sl<Dio>(instanceName: 'dio3'),
       loggingInterceptor: sl(), sharedPreferences: sl()));
 
   // Repository
   sl.registerLazySingleton(
-      () => SchoolRepo(prefs: sl(), dioClient: sl<DioClient3>()));
+      () => SchoolRepo(prefs: sl(), dioClient3: sl<DioClient3>(), dioClient1: sl<DioClient1>()));
   sl.registerLazySingleton(
-      () => RegisterRepo(prefs: sl(), dioClient: sl<DioClient>()));
+      () => RegisterRepo(prefs: sl(), dioClient1: sl<DioClient1>()));
   sl.registerLazySingleton(() => AuthRepo(
-      prefs: sl(), dioClient: sl<DioClient>(), dioClient1: sl<DioClient1>()));
+      prefs: sl(), dioClient1: sl<DioClient1>()));
   sl.registerLazySingleton(
-      () => AddComplaintRepo(prefs: sl(), dioClient: sl<DioClient>()));
+      () => AddComplaintRepo(prefs: sl(), dioClient1: sl<DioClient1>()));
   sl.registerLazySingleton(() => RoleRepo(prefs: sl()));
   sl.registerLazySingleton(() =>
-      ProfileRepo(dioClient: sl<DioClient>(), dioClient1: sl<DioClient1>()));
+      ProfileRepo(dioClient1: sl<DioClient1>()));
   sl.registerLazySingleton(
-      () => ForgotPasswordRepo(dioClient: sl<DioClient>(), prefs: sl()));
+      () => ForgotPasswordRepo(dioClient1: sl<DioClient1>(), prefs: sl()));
   sl.registerLazySingleton(
-      () => BannerRepo(dioClient: sl<DioClient>(), prefs: sl()));
+      () => BannerRepo(dioClient1: sl<DioClient1>(), prefs: sl()));
   sl.registerLazySingleton(
-      () => SettingRepo(dioClient: sl<DioClient>(), prefs: sl()));
+      () => SettingRepo(dioClient1: sl<DioClient1>(), prefs: sl()));
   sl.registerLazySingleton(
-      () => SurveyRepo(dioClient: sl<DioClient>(), prefs: sl()));
+      () => SurveyRepo(dioClient1: sl<DioClient1>(), prefs: sl()));
   sl.registerLazySingleton(
-      () => AppointmentRepo(dioClient: sl<DioClient>(), prefs: sl()));
+      () => AppointmentRepo(dioClient1: sl<DioClient1>(), prefs: sl()));
   sl.registerLazySingleton(
-      () => EventRepo(dioClient: sl<DioClient>(), prefs: sl()));
+      () => EventRepo(dioClient1: sl<DioClient1>(), prefs: sl()));
   sl.registerLazySingleton(
-      () => ToDoRepo(dioClient: sl<DioClient>(), prefs: sl()));
+      () => ToDoRepo(dioClient1: sl<DioClient1>(), prefs: sl()));
   sl.registerLazySingleton(
-      () => ApprovalRepo(dioClient: sl<DioClient>(), prefs: sl()));
+      () => ApprovalRepo(dioClient1: sl<DioClient1>(), prefs: sl()));
   sl.registerLazySingleton(() => CourseRepo(
         dioClient1: sl<DioClient1>(),
       ));

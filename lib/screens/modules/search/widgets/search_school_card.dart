@@ -6,6 +6,7 @@ import 'package:vam_vam/utils/imageResources.dart';
 
 class SearchSchoolCard extends StatelessWidget {
   final School school;
+  // final AuthProvider
 
   const SearchSchoolCard({Key? key, required this.school}) : super(key: key);
 

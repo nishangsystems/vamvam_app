@@ -235,7 +235,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                           if (data.index == 2) {
                             rolePro.saveOnboarding();
                             rolePro.setRoleType(getRoleType(RoleEnum.student));
-                            context.go(role);
+                            context.go(homeScreen);
                           } else {
                             data.setIndex(data.index + 1);
                           }
@@ -260,7 +260,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                         onTap: () {
                           rolePro.saveOnboarding();
                           rolePro.setRoleType(getRoleType(RoleEnum.student));
-                          context.go(role);
+                          context.go(homeScreen);
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8),

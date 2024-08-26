@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vam_vam/providers/AuthProvider.dart';
 import 'package:vam_vam/data/model/response/schoolModel.dart';
 import 'package:vam_vam/providers/HomeProvider.dart';
 import 'package:vam_vam/providers/bannerProvider.dart';
@@ -21,12 +22,13 @@ class Index extends StatefulWidget {
   State<Index> createState() => _IndexState();
 }
 
-class _IndexState extends State<Index> {
+class _IndexState extends State<Index> with WidgetsBindingObserver {
   double carouselIndex = 0.0;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     Future.microtask(() => _init());
   }
 
@@ -36,23 +38,27 @@ class _IndexState extends State<Index> {
     var role = Provider.of<RoleProvider>(context, listen: false);
     var school = Provider.of<SchoolsProvider>(context, listen: false);
     // var profile = Provider.of<ProfileProvider>(context, listen: false);
-    // var register = Provider.of<RegisterProvider>(context, listen: false);
-    // var auth = Provider.of<AuthProvider>(context, listen: false);
-    // profile
-    //     .getProfile(auth.getUserId(), register, role.roleType, context,
-    //         isFirst: 'first_time')
-    //     .then((value) {
-    //   Future.delayed(Duration(seconds: 2)).then((value) {
-    //     showProfileSnackbar(
-    //         context: context,
-    //         bottomMargin: ResponsiveHelper.height(context) * 0.85);
-    //   });
-    // });
+
     home.startLoader(true);
     school.getSchools();
     banner
         .getBanner(role.roleType, context)
         .then((value) => home.startLoader(false));
+
+    // setState(() {});
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      Future.microtask(() => _init());
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   @override
@@ -64,13 +70,19 @@ class _IndexState extends State<Index> {
             preferredSize: Size.fromHeight(appBarHeight),
             child: indexAppbar(context),
         ),
-        body: Consumer<SchoolsProvider> (
-          builder: (context, data, child) {
+        body: Consumer3<SchoolsProvider, AuthProvider, RoleProvider> (
+          builder: (context, data, auth, role, child) {
             if (data.isLoading) {
               return Center(
                 child: CircularProgressIndicator(),
               );
             }
+
+            print("auth data: $auth");
+
+            print("auth login status: ${
+              auth.isLoggedIn()
+            }");
 
             print("schools data: ${data.schools}");
 
@@ -82,7 +94,7 @@ class _IndexState extends State<Index> {
                   ),
                   indexSliderSection,
                   PreviousSchoolsWidget(),
-                  FeaturedSchoolsWidget(schools: data.schools)
+                  FeaturedSchoolsWidget(schools: data.schools, auth: auth, role: role)
                 ],
               ),
             );

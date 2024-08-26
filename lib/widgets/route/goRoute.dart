@@ -62,8 +62,10 @@ final GoRouter goRouter = GoRouter(
       builder: (context, state) => const Index()
     ),
     GoRoute(
-      path: login,
-      builder: (context, state) => const LoginScreen(),
+      path: '$login/:schoolName',
+      builder: (context, state) => LoginScreen(
+        schoolName: state.pathParameters['schoolName'].toString(),
+      ),
     ),
     GoRoute(
       path: verifyOTP,
@@ -190,8 +192,10 @@ final GoRouter goRouter = GoRouter(
       builder: (context, state) => const UserComplaintStatusScreen(),
     ),
     GoRoute(
-      path: role,
-      builder: (context, state) => const RoleScreen(),
+      path: '$role/:schoolName',
+      builder: (context, state) => RoleScreen(
+          schoolName: state.pathParameters['schoolName'].toString()
+      ),
     ),
 
     // Admin Module

@@ -22,12 +22,12 @@ class DioClient3 {
         this.loggingInterceptor,
         this.sharedPreferences,
       }) {
-    if (sharedPreferences!.containsKey(ApiConstant.keyUserId1)) {
-      id = sharedPreferences!.getString(ApiConstant.keyUserId1)!;
+    if (sharedPreferences!.containsKey(ApiConstant.keyUserId)) {
+      id = sharedPreferences!.getString(ApiConstant.keyUserId)!;
       debugPrint('USER_ID>> $id');
     }
-    if (sharedPreferences!.containsKey(ApiConstant.keyToken1)) {
-      token = sharedPreferences!.getString(ApiConstant.keyToken1)!;
+    if (sharedPreferences!.containsKey(ApiConstant.keyToken)) {
+      token = sharedPreferences!.getString(ApiConstant.keyToken)!;
       debugPrint("USER_TOKEN>> $token");
     }
 
@@ -51,7 +51,7 @@ class DioClient3 {
         CancelToken? cancelToken,
         ProgressCallback? onReceiveProgress,
       }) async {
-    debugPrint('BASE___URL>>>>> $baseUrl');
+    debugPrint('SCHOOL___BASE___URL>>>>> $baseUrl');
     try {
       var response = await dio.get(
         uri,
