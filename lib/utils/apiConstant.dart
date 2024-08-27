@@ -140,6 +140,7 @@ class ApiConstant {
       '/api/student/registration/eligible';
   // static const String getCaResult = '/api/student/results/ca?semester=';
   static const String getExamResult = '/api/student/results/exam?semester=';
+  static const String getCaResult = '/api/student/results/ca?semester=';
   static const String downloadResult =
       '/api/student/results/exam/download?semester=';
   static const String getFees = '/api/student/fee';

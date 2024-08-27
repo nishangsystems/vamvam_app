@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:vam_vam/data/model/faqModel.dart';
+import 'package:vam_vam/data/model/response/caResultModel.dart';
 import 'package:vam_vam/data/model/response/examResultModel.dart';
 import 'package:vam_vam/data/repo/resultRepo.dart';
 import 'package:flutter/material.dart';
@@ -55,6 +56,47 @@ class ResultProvider extends ChangeNotifier {
         //     (error, stack) {
         //   print('ERRROR>>> $error, Stackk>> $stack');
         // });
+        responseModel = ResponseModel(true, 'Success!');
+      }
+    } else {
+      startLoader(false);
+      String errorMessage;
+      if (apiResponse.error is String) {
+        errorMessage = apiResponse.error.toString();
+      } else {
+        errorMessage = apiResponse.error.errors[0].message;
+      }
+      responseModel = ResponseModel(false, errorMessage);
+    }
+    notifyListeners();
+    startLoader(false);
+    return responseModel;
+  }
+
+  // Get CA results
+  CAResultModel _caResultModel = CAResultModel();
+  CAResultModel get caResultModel => _caResultModel;
+
+  clearCaResult() {
+    _caResultModel = CAResultModel();
+    notifyListeners();
+  }
+
+  Future<ResponseModel> getCaResult(
+      {String? semesterId, String? batchId}) async {
+    startLoader(true);
+    ApiResponse apiResponse = await resultRepo.getCaResult(
+        batchId: batchId ?? "", semesterId: semesterId ?? '');
+    clearCaResult();
+    ResponseModel responseModel;
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
+      Map<String, dynamic> map = apiResponse.response!.data;
+      if (map != null && map.isEmpty) {
+        responseModel = ResponseModel(false, 'Something Went Wrong!');
+      } else {
+        startLoader(false);
+        _caResultModel = CAResultModel.fromJson(map);
         responseModel = ResponseModel(true, 'Success!');
       }
     } else {
