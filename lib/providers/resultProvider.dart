@@ -76,6 +76,10 @@ class ResultProvider extends ChangeNotifier {
   FeesModel? _feesData = FeesModel();
   FeesModel? get feesData => _feesData;
 
+  // filtered Fees
+  FeesModel? _filteredFeesData = FeesModel();
+  FeesModel? get filteredFeesData => _filteredFeesData;
+
   clearFees() {
     _feesData = FeesModel();
     notifyListeners();
@@ -93,6 +97,7 @@ class ResultProvider extends ChangeNotifier {
         responseModel = ResponseModel(false, 'Something Went Wrong!');
       } else {
         _feesData = FeesModel.fromJson(map);
+        _filteredFeesData = FeesModel.fromJson(map);
         responseModel = ResponseModel(true, 'Success!');
       }
     } else {
@@ -110,25 +115,22 @@ class ResultProvider extends ChangeNotifier {
     return responseModel;
   }
 
-  // extract a year matching the payment_year_id from payments{} and the year from /api/year response
-  String? getYear(String paymentYearId, List<Year> yearList) {
-    String? year = '';
-    for (var element in yearList) {
-      if (element.id == paymentYearId) {
-        year = element.name;
-      }
-    }
-    return year;
-  }
+  Object? filterFeesByBatchId(List<Payments> feeReportsJson, String batchId) {
+    List<Payments> feeReports = feeReportsJson.toList();
 
-  // set the list of years for fees
-  List<String?> getYearList(List<Year> yearList) {
-    List<String?> years = [];
-    for (var element in yearList) {
-      years.add(getYear(element.id as String, yearList));
+    // filter _feesData
+    var filtered = _feesData?.data!.payments!.where((report) => report.batchId == int.parse(batchId)).toList();
+    if (filtered != null && filtered.isNotEmpty) {
+      _filteredFeesData?.data!.payments = filtered;
+      print("filtered: ${_filteredFeesData?.data!.payments}");
+      notifyListeners();
+      return filtered;
+    } else {
+      _filteredFeesData?.data!.payments = [];
+      notifyListeners();
+      print("empty results: ${_filteredFeesData?.data!.payments}");
+       return [];
     }
-
-    return years;
   }
 
   // Get FAQ api
@@ -172,6 +174,8 @@ class ResultProvider extends ChangeNotifier {
     startLoader(false);
     return responseModel;
   }
+
+
 
   // Download Exam Result
   Future<ResponseModel> downloadResult(
