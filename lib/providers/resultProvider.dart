@@ -110,6 +110,27 @@ class ResultProvider extends ChangeNotifier {
     return responseModel;
   }
 
+  // extract a year matching the payment_year_id from payments{} and the year from /api/year response
+  String? getYear(String paymentYearId, List<Year> yearList) {
+    String? year = '';
+    for (var element in yearList) {
+      if (element.id == paymentYearId) {
+        year = element.name;
+      }
+    }
+    return year;
+  }
+
+  // set the list of years for fees
+  List<String?> getYearList(List<Year> yearList) {
+    List<String?> years = [];
+    for (var element in yearList) {
+      years.add(getYear(element.id as String, yearList));
+    }
+
+    return years;
+  }
+
   // Get FAQ api
   final List<FaqModel> _faqList = [];
   List<FaqModel> get faqList => _faqList;

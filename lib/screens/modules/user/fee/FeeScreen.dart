@@ -1,9 +1,11 @@
 import 'package:vam_vam/helpers/dateTimeHelper.dart';
 import 'package:vam_vam/helpers/responsiveHelper.dart';
+import 'package:vam_vam/providers/masterProvider.dart';
 import 'package:vam_vam/providers/resultProvider.dart';
 import 'package:vam_vam/screens/loader/loaderOverlay.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vam_vam/screens/modules/user/course/FormBScreen.dart';
 
 import '../../../../utils/colors.dart';
 import '../../../../utils/imageResources.dart';
@@ -26,6 +28,7 @@ class _FeeScreenState extends State<FeeScreen> {
     '2022',
     '2023',
   ];
+  String? selectedSemester;
 
   @override
   void initState() {
@@ -40,7 +43,18 @@ class _FeeScreenState extends State<FeeScreen> {
 
   _init() {
     var result = Provider.of<ResultProvider>(context, listen: false);
+    var master = Provider.of<MasterProvider>(context, listen: false);
+
     result.getFees().then((value) {
+      if (value.message.contains('PLATFORM CHARGES')) {
+        setShowPlatformCharges(true);
+      } else if (!value.isSuccess) {
+        errorToast(msg: value.message);
+      } else {
+        setShowPlatformCharges(false);
+      }
+    });
+    master.getSemester().then((value) {
       if (value.message.contains('PLATFORM CHARGES')) {
         setShowPlatformCharges(true);
       } else if (!value.isSuccess) {
@@ -53,8 +67,8 @@ class _FeeScreenState extends State<FeeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ResultProvider>(
-      builder: (context, result, child) => GestureDetector(
+    return Consumer2<MasterProvider, ResultProvider>(
+      builder: (context, master, result, child) => GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: Scaffold(
             backgroundColor: primaryDark,
@@ -134,6 +148,69 @@ class _FeeScreenState extends State<FeeScreen> {
                                     ],
                                   ),
                                 ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: PaddingConstant.l),
+                                  child: Container(
+                                    width: ResponsiveHelper.width(context),
+                                    height: ResponsiveHelper.height(context) * 0.05,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(
+                                            color: Colors.black.withOpacity(0.5))),
+                                    child: DropdownButtonHideUnderline(
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(left: 16, right: 16),
+                                        child: DropdownButton(
+                                            isExpanded: true,
+                                            hint: Text(
+                                              'Year',
+                                              style: TextStyle(
+                                                color: black,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                            value: selectedYear,
+                                            onChanged: (newValue) {
+                                              setState(() {
+                                                selectedYear = newValue.toString();
+                                              });
+                                              if (selectedYear != null &&
+                                                  selectedSemester != null) {
+                                                result
+                                                    .getExamResult(
+                                                    batchId:
+                                                    master.getBatchId(selectedYear),
+                                                    semesterId: master.getSemesterId(
+                                                        selectedSemester))
+                                                    .then((value) {
+                                                  if (!value.isSuccess &&
+                                                      value.message !=
+                                                          'Something Went Wrong!') {
+                                                    errorToast(
+                                                        msg: value.message, isLong: true);
+                                                  }
+                                                });
+                                              }
+                                            },
+                                            items: getUniqueBatch(master.batchList)
+                                                .map((value) {
+                                              return DropdownMenuItem(
+                                                value: '${value.name}',
+                                                child: Text(
+                                                  '${value.name}',
+                                                  style: TextStyle(
+                                                    color: black,
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                              );
+                                            }).toList()),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+
                                 // SizedBox(height: 10),
                                 // if (result.feesData!.data != null)
                                 //   if (selectedYear == '2020') ...[
