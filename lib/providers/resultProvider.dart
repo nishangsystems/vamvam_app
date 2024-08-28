@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:vam_vam/data/model/faqModel.dart';
+import 'package:vam_vam/data/model/response/caResultModel.dart';
 import 'package:vam_vam/data/model/response/examResultModel.dart';
 import 'package:vam_vam/data/repo/resultRepo.dart';
 import 'package:flutter/material.dart';
@@ -72,9 +73,54 @@ class ResultProvider extends ChangeNotifier {
     return responseModel;
   }
 
+  // Get CA results
+  CAResultModel _caResultModel = CAResultModel();
+  CAResultModel get caResultModel => _caResultModel;
+
+  clearCaResult() {
+    _caResultModel = CAResultModel();
+    notifyListeners();
+  }
+
+  Future<ResponseModel> getCaResult(
+      {String? semesterId, String? batchId}) async {
+    startLoader(true);
+    ApiResponse apiResponse = await resultRepo.getCaResult(
+        batchId: batchId ?? "", semesterId: semesterId ?? '');
+    clearCaResult();
+    ResponseModel responseModel;
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
+      Map<String, dynamic> map = apiResponse.response!.data;
+      if (map != null && map.isEmpty) {
+        responseModel = ResponseModel(false, 'Something Went Wrong!');
+      } else {
+        startLoader(false);
+        _caResultModel = CAResultModel.fromJson(map);
+        responseModel = ResponseModel(true, 'Success!');
+      }
+    } else {
+      startLoader(false);
+      String errorMessage;
+      if (apiResponse.error is String) {
+        errorMessage = apiResponse.error.toString();
+      } else {
+        errorMessage = apiResponse.error.errors[0].message;
+      }
+      responseModel = ResponseModel(false, errorMessage);
+    }
+    notifyListeners();
+    startLoader(false);
+    return responseModel;
+  }
+
   // Get Fees api
   FeesModel? _feesData = FeesModel();
   FeesModel? get feesData => _feesData;
+
+  // filtered Fees
+  FeesModel? _filteredFeesData = FeesModel();
+  FeesModel? get filteredFeesData => _filteredFeesData;
 
   clearFees() {
     _feesData = FeesModel();
@@ -93,6 +139,7 @@ class ResultProvider extends ChangeNotifier {
         responseModel = ResponseModel(false, 'Something Went Wrong!');
       } else {
         _feesData = FeesModel.fromJson(map);
+        _filteredFeesData = FeesModel.fromJson(map);
         responseModel = ResponseModel(true, 'Success!');
       }
     } else {
@@ -108,6 +155,24 @@ class ResultProvider extends ChangeNotifier {
     notifyListeners();
     startLoader(false);
     return responseModel;
+  }
+
+  Object? filterFeesByBatchId(List<Payments> feeReportsJson, String batchId) {
+    List<Payments> feeReports = feeReportsJson.toList();
+
+    // filter _feesData
+    var filtered = _feesData?.data!.payments!.where((report) => report.batchId == int.parse(batchId)).toList();
+    if (filtered != null && filtered.isNotEmpty) {
+      _filteredFeesData?.data!.payments = filtered;
+      print("filtered: ${_filteredFeesData?.data!.payments}");
+      notifyListeners();
+      return filtered;
+    } else {
+      _filteredFeesData?.data!.payments = [];
+      notifyListeners();
+      print("empty results: ${_filteredFeesData?.data!.payments}");
+       return [];
+    }
   }
 
   // Get FAQ api
@@ -151,6 +216,8 @@ class ResultProvider extends ChangeNotifier {
     startLoader(false);
     return responseModel;
   }
+
+
 
   // Download Exam Result
   Future<ResponseModel> downloadResult(

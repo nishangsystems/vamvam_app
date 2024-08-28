@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:vam_vam/data/repo/schoolRepo.dart';
 import 'package:vam_vam/providers/courseProvider.dart';
 import 'package:vam_vam/providers/masterProvider.dart';
 import 'package:vam_vam/providers/parentProvider.dart';
@@ -29,12 +30,14 @@ import 'package:vam_vam/providers/onBoardingProvider.dart';
 import 'package:vam_vam/providers/profileprovider.dart';
 import 'package:vam_vam/providers/registerProvider.dart';
 import 'package:vam_vam/providers/roleProvider.dart';
+import 'package:vam_vam/providers/schoolsProvider.dart';
 import 'package:vam_vam/providers/settingProvider.dart';
 import 'package:vam_vam/providers/splashProvider.dart';
 import 'package:vam_vam/providers/toDoProvider.dart';
 import 'package:vam_vam/screens/notification/PushNotificationsManager.dart';
 import 'package:vam_vam/utils/colors.dart';
 import 'package:vam_vam/utils/fontConstant.dart';
+import 'package:vam_vam/utils/schoolPreference.dart';
 import 'package:vam_vam/widgets/route/goRoute.dart';
 import 'diContainer.dart' as di;
 import 'http.dart';
@@ -59,6 +62,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => di.sl<SchoolsProvider>()),
         ChangeNotifierProvider(create: (context) => di.sl<SplashProvider>()),
         ChangeNotifierProvider(
             create: (context) => di.sl<OnBoardingProvider>()),
@@ -105,6 +109,7 @@ void main() async {
 
 _init() async {
   WidgetsFlutterBinding.ensureInitialized();
+  loadSchoolApiRoot();
   await di.init();
 
   // Flutter Downloader

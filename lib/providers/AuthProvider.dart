@@ -8,8 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vam_vam/data/model/params/loginModelParams.dart';
+import 'package:vam_vam/data/remote/dio/dioClient1.dart';
+import 'package:vam_vam/data/remote/dio/dioClient3.dart';
 import 'package:vam_vam/data/repo/authRepo.dart';
+import 'package:vam_vam/data/repo/schoolRepo.dart';
+import 'package:vam_vam/diContainer.dart';
 import 'package:vam_vam/helpers/enumHelper.dart';
 import 'package:vam_vam/providers/profileprovider.dart';
 import 'package:vam_vam/providers/registerProvider.dart';
@@ -17,6 +22,7 @@ import 'package:vam_vam/providers/registerProvider.dart';
 import '../data/model/base/apiResponse.dart';
 import '../data/model/base/responseModel.dart';
 import '../data/model/params/verifyOtpModelParams.dart';
+import '../data/model/response/schoolModel.dart';
 import '../utils/apiConstant.dart';
 import '../utils/constant.dart';
 
@@ -247,6 +253,7 @@ class AuthProvider extends ChangeNotifier {
       } else {
         var data = map['user'];
         saveUserIdAndUserToken1(map['token'].toString(), data['id'].toString());
+
         await login(
                 LoginModelParams(
                     deviceType: Platform.isAndroid ? 'android' : 'ios',

@@ -1,6 +1,7 @@
 // ignore_for_file: file_names, unnecessary_null_comparison
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bounce/flutter_bounce.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -14,6 +15,7 @@ import 'package:vam_vam/providers/locationMapProvider.dart';
 import 'package:vam_vam/providers/parentProvider.dart';
 import 'package:vam_vam/providers/profileprovider.dart';
 import 'package:vam_vam/providers/roleProvider.dart';
+import 'package:vam_vam/screens/modules/search/search_widget.dart';
 import 'package:vam_vam/utils/fontConstant.dart';
 import 'package:vam_vam/utils/paddingConstant.dart';
 import 'package:vam_vam/widgets/commonWidgets/textStyle.dart';
@@ -572,6 +574,52 @@ Widget homeAppbar({
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
           bottom: Radius.circular(35),
+        ),
+      ),
+    );
+
+Widget indexAppbar(context) => AppBar(
+      backgroundColor: primaryDark,
+      excludeHeaderSemantics: true,
+     clipBehavior: Clip.antiAlias,
+      flexibleSpace: Container(
+        height: 290,
+        width: double.infinity,
+        padding:
+            const EdgeInsets.only(top: 60, bottom: 10, left: 16, right: 16),
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage(ImageResources.splashBgImg), fit: BoxFit.fill),
+          borderRadius: BorderRadius.only(bottomRight: Radius.circular(50)),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Image.asset(
+                  ImageResources.logo,
+                  height: 30,
+                  width: 120,
+                  fit: BoxFit.fill,
+                ),
+                IconButton(
+                    onPressed: () {
+                       Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => SearchWidget()));
+                    },
+                    icon:
+                        Icon(Icons.search, color: white, size: 30, weight: 5)),
+              ],
+            )
+          ],
+        ),
+      ),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          bottomRight: Radius.circular(50),
         ),
       ),
     );

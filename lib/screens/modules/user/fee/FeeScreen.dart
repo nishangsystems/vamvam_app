@@ -1,9 +1,11 @@
 import 'package:vam_vam/helpers/dateTimeHelper.dart';
 import 'package:vam_vam/helpers/responsiveHelper.dart';
+import 'package:vam_vam/providers/masterProvider.dart';
 import 'package:vam_vam/providers/resultProvider.dart';
 import 'package:vam_vam/screens/loader/loaderOverlay.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vam_vam/screens/modules/user/course/FormBScreen.dart';
 
 import '../../../../utils/colors.dart';
 import '../../../../utils/imageResources.dart';
@@ -26,6 +28,7 @@ class _FeeScreenState extends State<FeeScreen> {
     '2022',
     '2023',
   ];
+  String? selectedSemester;
 
   @override
   void initState() {
@@ -40,7 +43,18 @@ class _FeeScreenState extends State<FeeScreen> {
 
   _init() {
     var result = Provider.of<ResultProvider>(context, listen: false);
+    var master = Provider.of<MasterProvider>(context, listen: false);
+
     result.getFees().then((value) {
+      if (value.message.contains('PLATFORM CHARGES')) {
+        setShowPlatformCharges(true);
+      } else if (!value.isSuccess) {
+        errorToast(msg: value.message);
+      } else {
+        setShowPlatformCharges(false);
+      }
+    });
+    master.getBatch().then((value) {
       if (value.message.contains('PLATFORM CHARGES')) {
         setShowPlatformCharges(true);
       } else if (!value.isSuccess) {
@@ -53,8 +67,8 @@ class _FeeScreenState extends State<FeeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ResultProvider>(
-      builder: (context, result, child) => GestureDetector(
+    return Consumer2<MasterProvider, ResultProvider>(
+      builder: (context, master, result, child) => GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: Scaffold(
             backgroundColor: primaryDark,
@@ -107,8 +121,8 @@ class _FeeScreenState extends State<FeeScreen> {
                           ],
                         )
                       : !result.loader &&
-                              result.feesData!.data != null &&
-                              result.feesData!.data!.payments != null
+                              result.filteredFeesData!.data != null &&
+                              result.filteredFeesData!.data!.payments != null
                           ? SingleChildScrollView(
                               child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -134,6 +148,58 @@ class _FeeScreenState extends State<FeeScreen> {
                                     ],
                                   ),
                                 ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: PaddingConstant.l),
+                                  child: Container(
+                                    width: ResponsiveHelper.width(context),
+                                    height: ResponsiveHelper.height(context) * 0.05,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(
+                                            color: Colors.black.withOpacity(0.5))),
+                                    child: DropdownButtonHideUnderline(
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(left: 16, right: 16),
+                                        child: DropdownButton(
+                                            isExpanded: true,
+                                            hint: Text(
+                                              'Year',
+                                              style: TextStyle(
+                                                color: black,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                            value: selectedYear,
+                                            onChanged: (newValue) {
+                                              setState(() {
+                                                selectedYear = newValue.toString();
+                                              });
+                                              print("selecte year for fees: ${master.getBatchId(selectedYear)}");
+                                              if (selectedYear != null) {
+                                                print("fees data: ${result.feesData!.data!.payments}");
+                                                var newR = result.filterFeesByBatchId(result.feesData!.data!.payments!, master.getBatchId(selectedYear)!);
+                                                print("filtered results: ${result.filteredFeesData!.data!.payments}");
+                                              }
+                                            },
+                                            items: getUniqueBatch(master.batchList)
+                                                .map((value) {
+                                              return DropdownMenuItem(
+                                                value: '${value.name}',
+                                                child: Text(
+                                                  '${value.name}',
+                                                  style: TextStyle(
+                                                    color: black,
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                              );
+                                            }).toList()),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+
                                 // SizedBox(height: 10),
                                 // if (result.feesData!.data != null)
                                 //   if (selectedYear == '2020') ...[
@@ -290,111 +356,128 @@ class _FeeScreenState extends State<FeeScreen> {
                                         ),
                                         child: Column(
                                           children: [
-                                            ListView.builder(
-                                              itemCount: result.feesData!.data!
-                                                  .payments!.length,
-                                              shrinkWrap: true,
-                                              physics:
-                                                  NeverScrollableScrollPhysics(),
-                                              itemBuilder:
-                                                  (BuildContext context,
-                                                      int index) {
-                                                var item = result.feesData!
-                                                    .data!.payments![index];
-                                                return Container(
-                                                  margin: EdgeInsets.only(
-                                                      top: 10,
-                                                      left: 10,
-                                                      right: 10),
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              12),
-                                                      border: Border.all(
-                                                          color:
-                                                              black.withOpacity(
-                                                                  0.1))),
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            left: 16.0,
-                                                            right: 16,
-                                                            top: 5,
-                                                            bottom: 5),
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                            '${item.item!.name}',
-                                                            style: TextStyle(
-                                                                fontSize: 12,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w700)),
-                                                        Text(
-                                                            '${item.amount} XAF',
-                                                            style: TextStyle(
-                                                                fontSize: 20,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w700)),
-                                                        SizedBox(height: 10),
-                                                        Text(
-                                                            'Paid On ${DateTimeHelper.formattedDate(DateTime.parse('${item.createdAt}'))}',
-                                                            style: TextStyle(
-                                                                fontSize: 12,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500)),
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: [
-                                                            Text(
-                                                                'Ref. ${item.referenceNumber}',
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        12,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w400)),
-                                                            // Container(
-                                                            //   decoration: BoxDecoration(
-                                                            //     border: Border.all(
-                                                            //         color: primaryDark,
-                                                            //         width: 1.5),
-                                                            //     borderRadius:
-                                                            //         BorderRadius.circular(
-                                                            //             5),
-                                                            //     color: primaryDark,
-                                                            //   ),
-                                                            //   child: Center(
-                                                            //     child: Padding(
-                                                            //       padding:
-                                                            //           const EdgeInsets.only(
-                                                            //               top: 2,
-                                                            //               bottom: 2,
-                                                            //               left: 8,
-                                                            //               right: 8),
-                                                            //       child: Icon(
-                                                            //         Icons.download_outlined,
-                                                            //         color: Colors.white,
-                                                            //         size: 18,
-                                                            //       ),
-                                                            //     ),
-                                                            //   ),
-                                                            // ),
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    ),
+                                            // if filtered fees payments is null show 'no payments found for this year'
+                                            if (result.filteredFeesData!.data!.payments!.isEmpty)
+                                              Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: ResponsiveHelper.height(context) *
+                                                        0.1),
+                                                child: Center(
+                                                  child: Text(
+                                                    'No Payment Found!',
+                                                    style: TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight: FontWeight.w600,
+                                                        color: black.withOpacity(0.5)),
                                                   ),
-                                                );
-                                              },
-                                            ),
+                                                ),
+                                              ),
+                                            if (result.filteredFeesData!.data!.payments!.isNotEmpty)
+                                              ListView.builder(
+                                                itemCount: result.filteredFeesData!.data!
+                                                    .payments!.length,
+                                                shrinkWrap: true,
+                                                physics:
+                                                    NeverScrollableScrollPhysics(),
+                                                itemBuilder:
+                                                    (BuildContext context,
+                                                        int index) {
+                                                  var item = result.filteredFeesData!
+                                                      .data!.payments![index];
+                                                  return Container(
+                                                    margin: EdgeInsets.only(
+                                                        top: 10,
+                                                        left: 10,
+                                                        right: 10),
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                                12),
+                                                        border: Border.all(
+                                                            color:
+                                                                black.withOpacity(
+                                                                    0.1))),
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 16.0,
+                                                              right: 16,
+                                                              top: 5,
+                                                              bottom: 5),
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                              '${item.item!.name}',
+                                                              style: TextStyle(
+                                                                  fontSize: 12,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w700)),
+                                                          Text(
+                                                              '${item.amount} XAF',
+                                                              style: TextStyle(
+                                                                  fontSize: 20,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w700)),
+                                                          SizedBox(height: 10),
+                                                          Text(
+                                                              'Paid On ${DateTimeHelper.formattedDate(DateTime.parse('${item.createdAt}'))}',
+                                                              style: TextStyle(
+                                                                  fontSize: 12,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500)),
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Text(
+                                                                  'Ref. ${item.referenceNumber}',
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          12,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w400)),
+                                                              // Container(
+                                                              //   decoration: BoxDecoration(
+                                                              //     border: Border.all(
+                                                              //         color: primaryDark,
+                                                              //         width: 1.5),
+                                                              //     borderRadius:
+                                                              //         BorderRadius.circular(
+                                                              //             5),
+                                                              //     color: primaryDark,
+                                                              //   ),
+                                                              //   child: Center(
+                                                              //     child: Padding(
+                                                              //       padding:
+                                                              //           const EdgeInsets.only(
+                                                              //               top: 2,
+                                                              //               bottom: 2,
+                                                              //               left: 8,
+                                                              //               right: 8),
+                                                              //       child: Icon(
+                                                              //         Icons.download_outlined,
+                                                              //         color: Colors.white,
+                                                              //         size: 18,
+                                                              //       ),
+                                                              //     ),
+                                                              //   ),
+                                                              // ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              ),
                                             SizedBox(height: 20),
                                           ],
                                         ),

@@ -1,9 +1,19 @@
+import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vam_vam/data/remote/dio/dioClient1.dart';
+import 'package:vam_vam/data/remote/dio/loggingInterceptor.dart';
+import 'package:vam_vam/diContainer.dart';
 import 'package:vam_vam/helpers/enumHelper.dart';
+import 'package:vam_vam/utils/schoolPreference.dart';
 
 class ApiConstant {
   static const String baseUrl = 'http://biaka.alobhatech.com';
   // static const String baseUrl1 = 'https://bnb.stlouissystems.org';
   static const String baseUrl1 = 'https://bnb.stlouissystems.org';
+
+  static const String baseUrl2 = 'https://vamvam.nishangsystems.org';
+
+  static const String getSchools = '/api/schools';
 
   // User api
   static const String getReleation = '/api/user/relation';
@@ -116,6 +126,7 @@ class ApiConstant {
   // Student api
   static const String login1 = '/api/login/student';
   static const String logout = '/api/logout/student';
+  static const String getSchool = '/api/student/school';
   static const String getBatch = '/api/student/years';
   static const String getSemester = '/api/student/semesters';
   static const String getLevels = '/api/student/levels';
@@ -129,6 +140,7 @@ class ApiConstant {
       '/api/student/registration/eligible';
   // static const String getCaResult = '/api/student/results/ca?semester=';
   static const String getExamResult = '/api/student/results/exam?semester=';
+  static const String getCaResult = '/api/student/results/ca?semester=';
   static const String downloadResult =
       '/api/student/results/exam/download?semester=';
   static const String getFees = '/api/student/fee';
@@ -177,6 +189,43 @@ class ApiConstant {
   static const String keyOnboarding = '#osdnsdhbsdfoadfsasdkj';
   static const String academicYear = '#wrwefacademicyearfsdff';
   static const String semester = '#dfsfdfsemesterfsdfds';
+
+  // This will be the URL used throughout the app
+  static String currentSchoolUrl = "";
+
+  // Method to set the current school URL
+  static void setCurrentSchoolUrl(String apiRoot) {
+    currentSchoolUrl = apiRoot;
+    // remove /api at the end
+    if (currentSchoolUrl.endsWith('/api')) {
+      currentSchoolUrl = currentSchoolUrl.substring(0, currentSchoolUrl.length - 4);
+      SchoolPreference.saveSchoolApiRoot(currentSchoolUrl);
+    }
+
+    reinitializeDioClient();
+    print("current: $currentSchoolUrl");
+  }
+
+  // Method to reset the current school URL (e.g., on logout)
+  static void resetCurrentSchoolUrl() {
+    currentSchoolUrl = "";
+    SchoolPreference.clearSchoolApiRoot();
+    reinitializeDioClient();
+  }
+
+  static void reinitializeDioClient() {
+    // // Retrieve the required dependencies from the service locator
+    // final Dio dioInstance = sl<Dio>(instanceName: 'dio2');
+    // final LoggingInterceptor? loggingInterceptor = sl<LoggingInterceptor>();
+    // final SharedPreferences? sharedPreferences = sl<SharedPreferences>();
+
+    sl.unregister<DioClient1>();  // Unregister the old DioClient1
+
+    print("api current school: ${ApiConstant.currentSchoolUrl}");
+    sl.registerFactory(() => DioClient1(
+        ApiConstant.currentSchoolUrl, sl<Dio>(instanceName: 'dio2'),
+        loggingInterceptor: sl(), sharedPreferences: sl()));
+  }
 
   static String getLogin(int roleType) {
     return roleType == getRoleType(RoleEnum.student)

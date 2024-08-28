@@ -31,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen>
   _initFun() async {
     // Provider.of<LocationMapProvider>(context, listen: false)
     //     .determinePositionNew();
-    var auth = Provider.of<AuthProvider>(context, listen: false);
+    // var auth = Provider.of<AuthProvider>(context, listen: false);
     var rol = Provider.of<RoleProvider>(context, listen: false);
     var profile = Provider.of<ProfileProvider>(context, listen: false);
     var reg = Provider.of<RegisterProvider>(context, listen: false);
@@ -42,37 +42,46 @@ class _SplashScreenState extends State<SplashScreen>
       appBarHeight = 100;
     }
     Future.delayed(const Duration(seconds: 3), () {
-      if (auth.isLoggedIn()) {
-        profile
-            .getProfile(auth.getUserId(), reg, rol.roleType, context)
-            .then((value) {
-          if (value.isSuccess) {
-            if (rol.getRoleType() == getRoleType(RoleEnum.student)) {
-              profile.getStudentProfile(context).then((value) {
-                if (value.isSuccess) {
-                  context.go(userBottomHomeBar);
-                } else {
-                  context.go(role);
-                }
-              });
-            } else if (rol.getRoleType() == getRoleType(RoleEnum.parent)) {
-              context.go(paretnBottomHomeBar);
-            } else if (rol.getRoleType() == getRoleType(RoleEnum.teacher)) {
-              context.go(represantativeBottomHomeBar);
-            } else {
-              context.go(adminBottomHomeBar);
-            }
-          } else {
-            context.go(role);
-            // context.go(onBoarding);
-          }
-        });
+      // if (auth.isLoggedIn()) {
+      //   profile
+      //       .getProfile(auth.getUserId(), reg, rol.roleType, context)
+      //       .then((value) {
+      //         print("profile value ${value}");
+      //     if (value.isSuccess) {
+      //       print("value success: ${value.isSuccess}");
+      //       context.go(homeScreen);
+      //       // if (rol.getRoleType() == getRoleType(RoleEnum.student)) {
+      //       //   profile.getStudentProfile(context).then((value) {
+      //       //     if (value.isSuccess) {
+      //       //       context.go(userBottomHomeBar);
+      //       //     } else {
+      //       //       context.go(role);
+      //       //     }
+      //       //   });
+      //       // } else if (rol.getRoleType() == getRoleType(RoleEnum.parent)) {
+      //       //   context.go(paretnBottomHomeBar);
+      //       // } else if (rol.getRoleType() == getRoleType(RoleEnum.teacher)) {
+      //       //   context.go(represantativeBottomHomeBar);
+      //       // } else {
+      //       //   context.go(adminBottomHomeBar);
+      //       // }
+      //     } else {
+      //       context.go(role);
+      //       // context.go(onBoarding);
+      //     }
+      //   });
+      // } else {
+      //   if (rol.getOnBoarding()) {
+      //     context.go(role);
+      //   } else {
+      //     context.go(onBoarding);
+      //   }
+      // }
+
+      if (rol.getOnBoarding()) {
+        context.go(homeScreen);
       } else {
-        if (rol.getOnBoarding()) {
-          context.go(role);
-        } else {
-          context.go(onBoarding);
-        }
+        context.go(onBoarding);
       }
     });
   }

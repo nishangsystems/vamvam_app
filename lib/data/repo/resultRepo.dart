@@ -23,6 +23,17 @@ class ResultRepo {
     }
   }
 
+  Future<ApiResponse> getCaResult(
+      {required String semesterId, required String batchId}) async {
+    try {
+      Response response = await dioClient1
+          .get("${ApiConstant.getCaResult}$semesterId&year=$batchId");
+      return ApiResponse.withSuccess(response);
+    } catch (e) {
+      return ApiResponse.withError(ApiErrorHandler.getMessage(e));
+    }
+  }
+
   Future<ApiResponse> getFees() async {
     try {
       Response response = await dioClient1.get(ApiConstant.getFees);

@@ -5,6 +5,7 @@ import 'package:vam_vam/screens/forgotPassword/forgotPasswordResetScreen.dart';
 import 'package:vam_vam/screens/forgotPassword/forgotPasswordScreen.dart';
 import 'package:vam_vam/screens/modules/admin/calendar/repCalender.dart';
 import 'package:vam_vam/screens/modules/admin/complaint/leaderTrackComplaintScreen.dart';
+import 'package:vam_vam/screens/modules/home/home_widget.dart';
 import 'package:vam_vam/screens/modules/admin/home/surveys/addSurveyScreen.dart';
 import 'package:vam_vam/screens/modules/admin/home/surveys/allSurveyScreen.dart';
 import 'package:vam_vam/screens/modules/parent/bottomHomeScreen.dart';
@@ -13,6 +14,7 @@ import 'package:vam_vam/screens/modules/representative/complaintStatus/complaint
 import 'package:vam_vam/screens/modules/representative/complaintStatus/repTrackComplaintScreen.dart';
 import 'package:vam_vam/screens/modules/representative/complaintStatus/repUpdateComplaintScreen.dart';
 import 'package:vam_vam/screens/modules/representative/events/eventScreen.dart';
+import 'package:vam_vam/screens/modules/search/search_widget.dart';
 import 'package:vam_vam/screens/modules/user/complaintStatus/complaintStatusScreen.dart';
 import 'package:vam_vam/screens/modules/user/complaintStatus/reviewComplaintScreen.dart';
 import 'package:vam_vam/screens/modules/user/events/eventScreen.dart';
@@ -56,8 +58,14 @@ final GoRouter goRouter = GoRouter(
       builder: (context, state) => const OnBoardingScreen(),
     ),
     GoRoute(
-      path: login,
-      builder: (context, state) => const LoginScreen(),
+      path: homeScreen,
+      builder: (context, state) => const Index()
+    ),
+    GoRoute(
+      path: '$login/:schoolName',
+      builder: (context, state) => LoginScreen(
+        schoolName: state.pathParameters['schoolName'].toString(),
+      ),
     ),
     GoRoute(
       path: verifyOTP,
@@ -85,6 +93,11 @@ final GoRouter goRouter = GoRouter(
     GoRoute(
       path: repbookAppointment,
       builder: (context, state) => const RepBookAppointmentScreen(),
+    ),
+
+    GoRoute(
+      path: searchScreen,
+      builder: (context, state) => const SearchWidget()
     ),
 
 // GoRoute(
@@ -179,8 +192,10 @@ final GoRouter goRouter = GoRouter(
       builder: (context, state) => const UserComplaintStatusScreen(),
     ),
     GoRoute(
-      path: role,
-      builder: (context, state) => const RoleScreen(),
+      path: '$role/:schoolName',
+      builder: (context, state) => RoleScreen(
+          schoolName: state.pathParameters['schoolName'].toString()
+      ),
     ),
 
     // Admin Module

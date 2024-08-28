@@ -6,14 +6,22 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bounce/flutter_bounce.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vam_vam/data/model/params/loginModelParams.dart';
+import 'package:vam_vam/data/model/response/schoolModel.dart';
+import 'package:vam_vam/data/remote/dio/dioClient1.dart';
+import 'package:vam_vam/data/remote/dio/dioClient3.dart';
+import 'package:vam_vam/data/repo/schoolRepo.dart';
+import 'package:vam_vam/diContainer.dart';
 import 'package:vam_vam/helpers/enumHelper.dart';
 import 'package:vam_vam/providers/AuthProvider.dart';
 import 'package:vam_vam/providers/profileprovider.dart';
 import 'package:vam_vam/providers/registerProvider.dart';
 import 'package:vam_vam/providers/roleProvider.dart';
+import 'package:vam_vam/providers/schoolsProvider.dart';
 import 'package:vam_vam/screens/loader/loaderOverlay.dart';
 import 'package:vam_vam/utils/fontConstant.dart';
+import 'package:vam_vam/utils/schoolPreference.dart';
 import 'package:vam_vam/widgets/commonWidgets/customTextFormField.dart';
 
 import '../../helpers/regexHelper.dart';
@@ -24,7 +32,8 @@ import '../../widgets/commonWidgets/commonWidgets.dart';
 import '../webView/webViewScreen.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final String schoolName;
+   LoginScreen({super.key, required this.schoolName});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -32,8 +41,15 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final formKey = GlobalKey<FormState>();
+  // late SchoolRepo schoolRepo;
+
   @override
   void initState() {
+    // schoolRepo = SchoolRepo(
+    //   dioClient3: sl<DioClient3>(),
+    //   dioClient1: sl<DioClient1>(),
+    //   prefs: sl<SharedPreferences>(),
+    // );
     Future.microtask(
         () => Provider.of<AuthProvider>(context, listen: false).disposeAuth());
     super.initState();
@@ -43,9 +59,9 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
-    return Consumer4<AuthProvider, RoleProvider, ProfileProvider,
-        RegisterProvider>(
-      builder: (context, data, role, profile, reg, child) => LoadingOverlay(
+    return Consumer5<AuthProvider, RoleProvider, ProfileProvider,
+        RegisterProvider, SchoolsProvider>(
+      builder: (context, data, role, profile, reg, schools, child) => LoadingOverlay(
         isLoading: data.isLoading,
         child: Scaffold(
           body: SafeArea(
@@ -412,7 +428,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               if (!data.isCheck) {
                                 showPrivacyError();
                               } else {
-                                _login(data, profile, reg, role);
+                                _login(data, profile, reg, role, schools);
                               }
                             }
                             // }
@@ -497,7 +513,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   _login(AuthProvider data, ProfileProvider profile, RegisterProvider register,
-      RoleProvider role) {
+      RoleProvider role, SchoolsProvider schools) {
     data.setIsSkip(false);
     LoginModelParams loginModelParams = LoginModelParams(
         mobileEmail: data.type == 'mobile'
@@ -512,8 +528,11 @@ class _LoginScreenState extends State<LoginScreen> {
       data
           .login1(data.emailTextEditingController.text.toString(),
               data.passwordTextEditingController.text, context)
-          .then((value) {
+          .then((value) async {
         if (value.isSuccess) {
+          School? school = await schools.getSchoolByName(widget.schoolName);
+          SchoolPreference.saveSchool(school);
+
           customToast(msg: value.message, color: successColor);
           context.push(userBottomHomeBar);
         } else {
@@ -524,8 +543,11 @@ class _LoginScreenState extends State<LoginScreen> {
       data
           .teacherLogin(data.emailTextEditingController.text.toString(),
               data.passwordTextEditingController.text, context)
-          .then((value) {
+          .then((value) async {
         if (value.isSuccess) {
+          School? school = await schools.getSchoolByName(widget.schoolName);
+          SchoolPreference.saveSchool(school);
+
           customToast(msg: value.message, color: successColor);
           context.push(represantativeBottomHomeBar);
         } else {
@@ -536,8 +558,11 @@ class _LoginScreenState extends State<LoginScreen> {
       data
           .parentLogin(data.emailTextEditingController.text.toString(),
               data.passwordTextEditingController.text, context)
-          .then((value) {
+          .then((value) async {
         if (value.isSuccess) {
+          School? school = await schools.getSchoolByName(widget.schoolName);
+          SchoolPreference.saveSchool(school);
+
           customToast(msg: value.message, color: successColor);
           context.push(paretnBottomHomeBar);
         } else {
@@ -547,19 +572,31 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       data
           .login(loginModelParams, profile, register, role.roleType, context)
-          .then((value) {
+          .then((value) async {
         if (value.isSuccess) {
           customToast(msg: value.message, color: successColor);
           if (data.type == 'mobile') {
             context.push(verifyOTP);
           } else {
             if (role.roleType == getRoleType(RoleEnum.student)) {
+              School? school = await schools.getSchoolByName(widget.schoolName);
+              SchoolPreference.saveSchool(school);
+
               context.push(userBottomHomeBar);
             } else if (role.roleType == getRoleType(RoleEnum.parent)) {
+              School? school = await schools.getSchoolByName(widget.schoolName);
+              SchoolPreference.saveSchool(school);
+
               context.push(adminBottomHomeBar);
             } else if (role.roleType == getRoleType(RoleEnum.teacher)) {
+              School? school = await schools.getSchoolByName(widget.schoolName);
+              SchoolPreference.saveSchool(school);
+
               context.push(represantativeBottomHomeBar);
             } else {
+              School? school = await schools.getSchoolByName(widget.schoolName);
+              SchoolPreference.saveSchool(school);
+
               context.push(represantativeBottomHomeBar);
             }
           }

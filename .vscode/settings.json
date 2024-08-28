@@ -1,3 +1,4 @@
 {
-  "cmake.sourceDirectory": "/Users/alobha/Documents/Development/BIAKA/biaka/windows/runner"
+  "cmake.sourceDirectory": "/Users/alobha/Documents/Development/BIAKA/biaka/windows/runner",
+  "dart.flutterSdkPath": ".fvm/versions/3.13.0"
 }

@@ -13,6 +13,7 @@ class RoleProvider extends ChangeNotifier {
 
   setRoleType(int value) {
     _roleType = value;
+    print("current role ${_roleType}");
     notifyListeners();
     roleRepo.saveUserRole(value);
     if (value == 0) {
