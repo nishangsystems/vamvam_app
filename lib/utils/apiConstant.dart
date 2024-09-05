@@ -9,8 +9,7 @@ import 'package:vam_vam/utils/schoolPreference.dart';
 class ApiConstant {
   static const String baseUrl = 'https://complain.buibsystems.org';
   // static const String baseUrl1 = 'https://bnb.stlouissystems.org';
-  static const String baseUrl1 = 'https://bnb.stlouissystems.org';
-
+   static const String baseUrl1 = 'https://students.buibsystems.org';  
   static const String baseUrl2 = 'https://vamvam.nishangsystems.org';
 
   static const String getSchools = '/api/schools';
