@@ -285,7 +285,6 @@ class _HomeScreenState extends State<HomeScreen> {
         onPressed: onTap,
         child: Container(
           decoration: BoxDecoration(
-              color: powderPink,
               borderRadius: BorderRadius.circular(17),
               gradient: LinearGradient(
                   begin: Alignment.topCenter,

@@ -25,11 +25,11 @@ class _WebViewScreenState extends State<WebViewScreen> {
     super.initState();
 
     if (widget.status == PrivacyTermsEnum.privacy) {
-      url = ApiConstant.privacyPolicy;
+      url = "https://nishangsystems.org/vamvam-privacy-policy/";
     } else if (widget.status == PrivacyTermsEnum.terms) {
-      url = ApiConstant.termsAndCondition;
+      url = "https://nishangsystems.org/vamvam-privacy-policy/";
     } else {
-      url = ApiConstant.about;
+      url = "https://nishangsystems.org/about-us-2/";
     }
   }
 
@@ -55,7 +55,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
                     Expanded(
                       child: InAppWebView(
                         initialUrlRequest: URLRequest(
-                            url: Uri.parse('${ApiConstant.baseUrl}$url')),
+                            url: WebUri(url)),
                         onWebViewCreated: (controller) {
                           setState(() {
                             webViewCtrl = controller;

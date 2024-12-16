@@ -10,6 +10,8 @@ class ImageResources {
   static const String bannerImage2 = 'assets/images/bannerImg_02.png';
   static const String splashBgImg = 'assets/images/splash_bg.png';
   static const String logo = 'assets/images/VamVam.png';
+  static const String vmschoolPlaceholder = 'assets/images/vmschool_placeholder.png';
+  static const String vmschoolPlaceholder2 = 'assets/images/vmschool_placeholder2.png';
   static const String onBoardingImg1 = 'assets/images/on_boarding_img_01.png';
   static const String onBoardingImg2 = 'assets/images/on_boarding_img_02.png';
   static const String onBoardingImg3 = 'assets/images/on_boarding_img_03.png';
@@ -17,7 +19,7 @@ class ImageResources {
   static const String directorImg = 'assets/images/director.png';
   static const String executiveImg = 'assets/images/executive.png';
   static const String roleBgImg = 'assets/images/role_bg.png';
-  static const String splashIcon = 'assets/images/splashIcon.png';
+  static const String splashIcon = 'assets/images/splashicon.png';
 
   // Admin Module
   static const String adminMyCalendarImg = "assets/images/my_calendar_img.png";
@@ -40,6 +42,8 @@ class ImageResources {
   static const String represantativeToDoImg = "assets/images/homeIcon6.png";
   static const String announcementIcon = "assets/icons/announcementIcon.png";
   static const String profileDummyImg = "assets/images/profile_dummy_img.png";
+
+  static  const String kunfu_pandaa  = "assets/images/panda.png";
 }
 
 class IconResource {

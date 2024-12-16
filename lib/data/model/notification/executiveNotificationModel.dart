@@ -46,7 +46,7 @@ class RepNotificationData {
       this.isRead});
 
   RepNotificationData.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    id = json['id'].toString();
     type = json['type'];
     title = json['title'];
     message = json['message'];

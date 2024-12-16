@@ -1,19 +1,21 @@
 import 'dart:io';
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bounce/flutter_bounce.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:vam_vam/data/model/params/loginModelParams.dart';
+import 'package:vam_vam/data/model/response/schoolModel.dart';
 import 'package:vam_vam/helpers/enumHelper.dart';
 import 'package:vam_vam/providers/AuthProvider.dart';
 import 'package:vam_vam/providers/profileprovider.dart';
 import 'package:vam_vam/providers/registerProvider.dart';
 import 'package:vam_vam/providers/roleProvider.dart';
+import 'package:vam_vam/providers/schoolsProvider.dart';
 import 'package:vam_vam/screens/loader/loaderOverlay.dart';
 import 'package:vam_vam/utils/fontConstant.dart';
+import 'package:vam_vam/utils/schoolPreference.dart';
 import 'package:vam_vam/widgets/commonWidgets/customTextFormField.dart';
 
 import '../../helpers/regexHelper.dart';
@@ -21,10 +23,11 @@ import '../../utils/colors.dart';
 import '../../utils/constant.dart';
 import '../../utils/paddingConstant.dart';
 import '../../widgets/commonWidgets/commonWidgets.dart';
-import '../webView/webViewScreen.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final String schoolName;
+
+  LoginScreen({super.key, required this.schoolName});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -32,21 +35,32 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final formKey = GlobalKey<FormState>();
+
+  // late SchoolRepo schoolRepo;
+
   @override
   void initState() {
+    // schoolRepo = SchoolRepo(
+    //   dioClient3: sl<DioClient3>(),
+    //   dioClient1: sl<DioClient1>(),
+    //   prefs: sl<SharedPreferences>(),
+    // );
     Future.microtask(
         () => Provider.of<AuthProvider>(context, listen: false).disposeAuth());
     super.initState();
   }
 
+  bool loading = false;
+
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
-    return Consumer4<AuthProvider, RoleProvider, ProfileProvider,
-        RegisterProvider>(
-      builder: (context, data, role, profile, reg, child) => LoadingOverlay(
-        isLoading: data.isLoading,
+    return Consumer5<AuthProvider, RoleProvider, ProfileProvider,
+        RegisterProvider, SchoolsProvider>(
+      builder: (context, data, role, profile, reg, schools, child) =>
+          LoadingOverlay(
+        isLoading: data.isLoading || loading,
         child: Scaffold(
           body: SafeArea(
             top: false,
@@ -56,10 +70,25 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Form(
                 key: formKey,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     loginHeaderContainer(context),
                     SizedBox(height: height * 0.08),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 14),
+                      child: Text(
+                        widget.schoolName,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: textColor,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800,
+                            decorationColor: textColor),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 14),
                       child: Row(
@@ -319,83 +348,83 @@ class _LoginScreenState extends State<LoginScreen> {
                     //     ),
                     //   ),
                     // ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 15,
-                        ),
-                        Checkbox(
-                          value:
-                              Provider.of<AuthProvider>(context, listen: true)
-                                  .isCheck,
-                          onChanged: (value) {
-                            data.setIsCheck();
-                            setState(() {});
-                          },
-                          activeColor: primaryLight,
-                          checkColor: white,
-                        ),
-                        Expanded(
-                          child: RichText(
-                            maxLines: 2,
-                            text: TextSpan(
-                              children: <TextSpan>[
-                                TextSpan(
-                                  text: 'I accept the ',
-                                  style: TextStyle(
-                                    color: textColor.withOpacity(0.8),
-                                    decorationColor: textColor.withOpacity(0.8),
-                                  ),
-                                ),
-                                TextSpan(
-                                    text: 'Terms of service',
-                                    style: TextStyle(
-                                        color: textColor,
-                                        decorationColor: textColor,
-                                        fontWeight: FontWeight.w600,
-                                        decoration: TextDecoration.underline),
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = () => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  WebViewScreen(
-                                                    status:
-                                                        PrivacyTermsEnum.terms,
-                                                  )))),
-                                TextSpan(
-                                  text: ' and ',
-                                  style: TextStyle(
-                                    color: textColor.withOpacity(0.8),
-                                    fontSize: 12,
-                                  ),
-                                ),
-                                TextSpan(
-                                    text: 'Privacy policy',
-                                    style: TextStyle(
-                                        color: textColor,
-                                        decorationColor: textColor,
-                                        fontWeight: FontWeight.w600,
-                                        decoration: TextDecoration.underline),
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = () => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  WebViewScreen(
-                                                    status: PrivacyTermsEnum
-                                                        .privacy,
-                                                  )))),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                      ],
-                    ),
+                    // Row(
+                    //   crossAxisAlignment: CrossAxisAlignment.center,
+                    //   children: [
+                    //     SizedBox(
+                    //       width: 15,
+                    //     ),
+                    //     Checkbox(
+                    //       value:
+                    //           Provider.of<AuthProvider>(context, listen: true)
+                    //               .isCheck,
+                    //       onChanged: (value) {
+                    //         data.setIsCheck();
+                    //         setState(() {});
+                    //       },
+                    //       activeColor: primaryLight,
+                    //       checkColor: white,
+                    //     ),
+                    //     Expanded(
+                    //       child: RichText(
+                    //         maxLines: 2,
+                    //         text: TextSpan(
+                    //           children: <TextSpan>[
+                    //             TextSpan(
+                    //               text: 'I accept the ',
+                    //               style: TextStyle(
+                    //                 color: textColor.withOpacity(0.8),
+                    //                 decorationColor: textColor.withOpacity(0.8),
+                    //               ),
+                    //             ),
+                    //             TextSpan(
+                    //                 text: 'Terms of service',
+                    //                 style: TextStyle(
+                    //                     color: textColor,
+                    //                     decorationColor: textColor,
+                    //                     fontWeight: FontWeight.w600,
+                    //                     decoration: TextDecoration.underline),
+                    //                 recognizer: TapGestureRecognizer()
+                    //                   ..onTap = () => Navigator.push(
+                    //                       context,
+                    //                       MaterialPageRoute(
+                    //                           builder: (context) =>
+                    //                               WebViewScreen(
+                    //                                 status:
+                    //                                     PrivacyTermsEnum.terms,
+                    //                               )))),
+                    //             TextSpan(
+                    //               text: ' and ',
+                    //               style: TextStyle(
+                    //                 color: textColor.withOpacity(0.8),
+                    //                 fontSize: 12,
+                    //               ),
+                    //             ),
+                    //             TextSpan(
+                    //                 text: 'Privacy policy',
+                    //                 style: TextStyle(
+                    //                     color: textColor,
+                    //                     decorationColor: textColor,
+                    //                     fontWeight: FontWeight.w600,
+                    //                     decoration: TextDecoration.underline),
+                    //                 recognizer: TapGestureRecognizer()
+                    //                   ..onTap = () => Navigator.push(
+                    //                       context,
+                    //                       MaterialPageRoute(
+                    //                           builder: (context) =>
+                    //                               WebViewScreen(
+                    //                                 status: PrivacyTermsEnum
+                    //                                     .privacy,
+                    //                               )))),
+                    //           ],
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     SizedBox(
+                    //       width: 10,
+                    //     ),
+                    //   ],
+                    // ),
 
                     Padding(
                       padding: const EdgeInsets.only(
@@ -409,11 +438,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           onTap: () {
                             // if (role.roleType != getRoleType(RoleEnum.parent)) {
                             if (formKey.currentState!.validate()) {
-                              if (!data.isCheck) {
-                                showPrivacyError();
-                              } else {
-                                _login(data, profile, reg, role);
-                              }
+                              // if (!data.isCheck) {
+                              //   showPrivacyError();
+                              // } else {
+                              //  _login(data, profile, reg, role, schools);
+                              // }
+
+                              _login(data, profile, reg, role, schools);
                             }
                             // }
                             // else {
@@ -497,7 +528,11 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   _login(AuthProvider data, ProfileProvider profile, RegisterProvider register,
-      RoleProvider role) {
+      RoleProvider role, SchoolsProvider schools) {
+
+    setState(() {
+      loading = true;
+    });
     data.setIsSkip(false);
     LoginModelParams loginModelParams = LoginModelParams(
         mobileEmail: data.type == 'mobile'
@@ -508,58 +543,71 @@ class _LoginScreenState extends State<LoginScreen> {
         deviceType: Platform.isAndroid ? 'android' : 'ios',
         // deviceType: 'android',
         deviceToken: data.deviceToken ?? 'dfsafdfs');
+
     if (role.roleType == getRoleType(RoleEnum.student)) {
       data
           .login1(data.emailTextEditingController.text.toString(),
               data.passwordTextEditingController.text, context)
-          .then((value) {
-        if (value.isSuccess) {
-          customToast(msg: value.message, color: successColor);
-          context.push(userBottomHomeBar);
-        } else {
-          customToast(msg: value.message, color: errorColor);
-        }
+          .then((value) async {
+              if (value.isSuccess) {
+                School? school = await schools.getSchoolByName(widget.schoolName);
+                SchoolPreference.saveSchool(school);
+                customToast(msg: value.message, color: successColor);
+                context.pushReplacement(userBottomHomeBar);
+              } else {
+                customToast(msg: value.message, color: errorColor);
+              }
+              setState(() {
+                loading = false;
+              });
       });
     } else if (role.roleType == getRoleType(RoleEnum.teacher)) {
       data
           .teacherLogin(data.emailTextEditingController.text.toString(),
               data.passwordTextEditingController.text, context)
-          .then((value) {
+          .then((value) async {
         if (value.isSuccess) {
+          School? school = await schools.getSchoolByName(widget.schoolName);
+          SchoolPreference.saveSchool(school);
+
           customToast(msg: value.message, color: successColor);
           context.push(represantativeBottomHomeBar);
         } else {
           customToast(msg: value.message, color: errorColor);
         }
-      });
-    } else if (role.roleType == getRoleType(RoleEnum.parent)) {
-      data
-          .parentLogin(data.emailTextEditingController.text.toString(),
-              data.passwordTextEditingController.text, context)
-          .then((value) {
-        if (value.isSuccess) {
-          customToast(msg: value.message, color: successColor);
-          context.push(paretnBottomHomeBar);
-        } else {
-          customToast(msg: value.message, color: errorColor);
-        }
+        setState(() {
+          loading = false;
+        });
       });
     } else {
+
       data
           .login(loginModelParams, profile, register, role.roleType, context)
-          .then((value) {
+          .then((value) async {
         if (value.isSuccess) {
           customToast(msg: value.message, color: successColor);
           if (data.type == 'mobile') {
             context.push(verifyOTP);
           } else {
             if (role.roleType == getRoleType(RoleEnum.student)) {
+              School? school = await schools.getSchoolByName(widget.schoolName);
+              SchoolPreference.saveSchool(school);
+
               context.push(userBottomHomeBar);
             } else if (role.roleType == getRoleType(RoleEnum.parent)) {
+              School? school = await schools.getSchoolByName(widget.schoolName);
+              SchoolPreference.saveSchool(school);
+
               context.push(adminBottomHomeBar);
             } else if (role.roleType == getRoleType(RoleEnum.teacher)) {
+              School? school = await schools.getSchoolByName(widget.schoolName);
+              SchoolPreference.saveSchool(school);
+
               context.push(represantativeBottomHomeBar);
             } else {
+              School? school = await schools.getSchoolByName(widget.schoolName);
+              SchoolPreference.saveSchool(school);
+
               context.push(represantativeBottomHomeBar);
             }
           }
@@ -570,6 +618,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   : value.message,
               color: errorColor);
         }
+        loading = false;
       });
     }
   }

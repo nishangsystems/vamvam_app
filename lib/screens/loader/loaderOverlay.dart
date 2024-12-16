@@ -20,26 +20,14 @@ class LoadingOverlay extends StatelessWidget {
             child: ModalBarrier(dismissible: false, color: Colors.black),
           ),
         if (isLoading)
-          Center(
+          Container(
+            color: Color(0xff11f1f1f1),
+            child: Center(
             child: SpinKitFadingCircle(
+
               color: hinduColor,
             ),
-            // Container(
-            //   alignment: Alignment.center,
-            //   height: 120,
-            //   width: 120,
-            //   padding: EdgeInsets.all(12),
-            //   decoration: BoxDecoration(
-            //     color: white,
-            //     borderRadius: BorderRadius.circular(12)
-            //   ),
-            //   child: const Center(
-            //     child: SpinKitFoldingCube(
-            //       color: primaryDark,
-            //     ),
-            //   ),
-            // ),
-          ),
+          ),),
       ],
     );
   }

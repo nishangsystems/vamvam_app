@@ -4,7 +4,6 @@ import 'package:vam_vam/data/model/notification/executiveNotificationModel.dart'
 import 'package:vam_vam/data/model/notification/leaderNotificationModel.dart';
 import 'package:vam_vam/data/model/notification/userNotificationModel.dart';
 import 'package:vam_vam/data/repo/appointmentRepo.dart';
-
 import '../data/model/base/apiResponse.dart';
 import '../data/model/base/responseModel.dart';
 import '../helpers/dialogHelper.dart';
@@ -13,13 +12,16 @@ import '../utils/stringResources.dart';
 
 class NotificationProvider extends ChangeNotifier {
   final AppointmentRepo appoinmentRepo;
+
   NotificationProvider({required this.appoinmentRepo});
 
 // user notification listing
   bool _notificationLoading = false;
+
   bool get notificationLoading => _notificationLoading;
 
   final List<UserNotificationData> _usernotificationList = [];
+
   List<UserNotificationData> get usernotificationList => _usernotificationList;
 
   notificationLoader(bool value) {
@@ -28,7 +30,7 @@ class NotificationProvider extends ChangeNotifier {
   }
 
 // Notification list getting
-  Future<ResponseModel> getnotificationList(String userId) async {
+  Future<ResponseModel> getNotificationList(String userId) async {
     notificationLoader(true);
 
     ApiResponse apiResponse =
@@ -71,11 +73,48 @@ class NotificationProvider extends ChangeNotifier {
     return responseModel;
   }
 
+  Future<ResponseModel> getStudentNotificationList(String userId) async {
+    notificationLoader(true);
+
+    ApiResponse apiResponse =
+        await appoinmentRepo.getstudentnotificationList(userId: userId);
+
+    ResponseModel responseModel;
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
+      Map map = apiResponse.response!.data;
+      _usernotificationList.clear();
+      notifyListeners();
+      map['notifications'].forEach((item) {
+        UserNotificationData model = UserNotificationData.fromJson(item);
+        _usernotificationList.add(model);
+        notifyListeners();
+      });
+
+      responseModel = ResponseModel(true,"");
+    } else {
+      String errorMessage;
+      if (apiResponse.error is String) {
+        errorMessage = apiResponse.error.toString();
+      } else {
+        errorMessage = apiResponse.error.errors[0].message;
+      }
+      _usernotificationList.clear();
+      notifyListeners();
+      responseModel = ResponseModel(false, errorMessage);
+    }
+    notifyListeners();
+    notificationLoader(false);
+    return responseModel;
+  }
+
 // representative notification
   bool _repnotificationLoading = false;
+
   bool get repnotificationLoading => _repnotificationLoading;
 
   final List<RepNotificationData> _repnotificationList = [];
+
   List<RepNotificationData> get repnotificationList => _repnotificationList;
 
   repnotificationLoader(bool value) {
@@ -90,25 +129,28 @@ class NotificationProvider extends ChangeNotifier {
     ApiResponse apiResponse =
         await appoinmentRepo.getrepnotificationList(userId: userId);
     ResponseModel responseModel;
+
     if (apiResponse.response != null &&
         apiResponse.response!.statusCode == 200) {
+
       Map map = apiResponse.response!.data;
-      if (map['code'] != successCode) {
+      if (map['success'] != successCode1) {
         if (map['message'] == unAuthonticated) {
           // unAuthenticatedPopUp(context: context);
         }
         _repnotificationList.clear();
         notifyListeners();
-        responseModel = ResponseModel(false, map['message']);
+        responseModel = ResponseModel(false, "");
       } else {
         _repnotificationList.clear();
         notifyListeners();
-        map['data'].forEach((item) {
+        map['notifications'].forEach((item) {
           RepNotificationData model = RepNotificationData.fromJson(item);
           _repnotificationList.add(model);
           notifyListeners();
         });
-        responseModel = ResponseModel(true, map['message']);
+
+        responseModel = ResponseModel(true, "");
       }
     } else {
       String errorMessage;
@@ -128,9 +170,11 @@ class NotificationProvider extends ChangeNotifier {
 
 // leader notification
   bool _leadernotificationLoading = false;
+
   bool get leadernotificationLoading => _leadernotificationLoading;
 
   final List<LeaderNotificationData> _leadernotificationList = [];
+
   List<LeaderNotificationData> get leadernotificationList =>
       _leadernotificationList;
 
@@ -215,6 +259,49 @@ class NotificationProvider extends ChangeNotifier {
       } else {
         errorMessage = apiResponse.error.errors[0].message;
       }
+      responseModel = ResponseModel(false, errorMessage);
+    }
+    notifyListeners();
+    notificationLoader(false);
+    return responseModel;
+  }
+
+  Future<ResponseModel> getnotificationList(String userId) async {
+    notificationLoader(true);
+
+    ApiResponse apiResponse =
+        await appoinmentRepo.getstudentnotificationList(userId: userId);
+
+    ResponseModel responseModel;
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
+      Map map = apiResponse.response!.data;
+      if (map['code'] != successCode) {
+        if (map['message'] == unAuthonticated) {
+          // unAuthenticatedPopUp(context: context);
+        }
+        _usernotificationList.clear();
+        notifyListeners();
+        responseModel = ResponseModel(false, map['message']);
+      } else {
+        _usernotificationList.clear();
+        notifyListeners();
+        map['data'].forEach((item) {
+          UserNotificationData model = UserNotificationData.fromJson(item);
+          _usernotificationList.add(model);
+          notifyListeners();
+        });
+        responseModel = ResponseModel(true, map['message']);
+      }
+    } else {
+      String errorMessage;
+      if (apiResponse.error is String) {
+        errorMessage = apiResponse.error.toString();
+      } else {
+        errorMessage = apiResponse.error.errors[0].message;
+      }
+      _usernotificationList.clear();
+      notifyListeners();
       responseModel = ResponseModel(false, errorMessage);
     }
     notifyListeners();

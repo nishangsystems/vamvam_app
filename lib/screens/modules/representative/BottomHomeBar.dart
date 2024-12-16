@@ -1,5 +1,6 @@
 // ignore_for_file: unused_field
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vam_vam/providers/AuthProvider.dart';
@@ -7,6 +8,7 @@ import 'package:vam_vam/providers/profileprovider.dart';
 import 'package:vam_vam/providers/registerProvider.dart';
 import 'package:vam_vam/providers/roleProvider.dart';
 import 'package:vam_vam/screens/loader/loaderOverlay.dart';
+import 'package:vam_vam/utils/schoolPreference.dart';
 import '../../../providers/HomeProvider.dart';
 import '../../../providers/bannerProvider.dart';
 import '../../../utils/colors.dart';
@@ -39,6 +41,12 @@ class _RepresantativeBottomHomeBarState
   void initState() {
     super.initState();
     _init();
+
+    SchoolPreference.getSchoolID().then((school_id){
+      FirebaseMessaging messaging = FirebaseMessaging.instance;
+      messaging.subscribeToTopic('school_${school_id}_teachers');
+      messaging.subscribeToTopic('school_${school_id}_general');
+    });
   }
 
   @override
@@ -47,7 +55,6 @@ class _RepresantativeBottomHomeBarState
       builder: (context, data, child) => LoadingOverlay(
         isLoading: data.isLoading,
         child: Scaffold(
-          backgroundColor: primaryDark,
           appBar: PreferredSize(
               preferredSize: Size.fromHeight(appBarHeight),
               child: homeAppbar(
@@ -117,9 +124,11 @@ class _RepresantativeBottomHomeBarState
     var role = Provider.of<RoleProvider>(context, listen: false);
     var auth = Provider.of<AuthProvider>(context, listen: false);
     home.startLoader(true);
-    banner.getBanner(role.roleType, context).then((value) => profile
+    banner.getBanner(role.roleType, context).then((value){});
+
+    profile
         .getProfile(auth.getUserId(), register, role.roleType, context)
-        .then((value) => home.startLoader(false)));
+        .then((value) => home.startLoader(false));
   }
 
   _onReresh() async {

@@ -3,20 +3,21 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vam_vam/data/model/params/registerModelParams.dart';
 import 'package:vam_vam/data/model/params/wardModelParams.dart';
 import 'package:vam_vam/data/remote/dio/dioClient.dart';
+import 'package:vam_vam/data/remote/dio/dioClient1.dart';
 
 import '../../utils/apiConstant.dart';
 import '../model/base/apiResponse.dart';
 import '../remote/exception/apiErrorHandler.dart';
 
 class RegisterRepo {
-  final DioClient dioClient;
+  final DioClient1 dioClient1;
   final SharedPreferences prefs;
 
-  RegisterRepo({required this.dioClient, required this.prefs});
+  RegisterRepo({required this.dioClient1, required this.prefs});
 
   Future<ApiResponse> getRelation() async {
     try {
-      Response response = await dioClient.get(
+      Response response = await dioClient1.get(
         ApiConstant.getReleation,
       );
       return ApiResponse.withSuccess(response);
@@ -27,7 +28,7 @@ class RegisterRepo {
 
   Future<ApiResponse> getState() async {
     try {
-      Response response = await dioClient.get(
+      Response response = await dioClient1.get(
         ApiConstant.getState,
       );
       return ApiResponse.withSuccess(response);
@@ -38,7 +39,7 @@ class RegisterRepo {
 
   Future<ApiResponse> getDistrict({required String stateId}) async {
     try {
-      Response response = await dioClient
+      Response response = await dioClient1
           .post(ApiConstant.getDistrict, data: {'state_id': stateId});
       return ApiResponse.withSuccess(response);
     } catch (e) {
@@ -49,7 +50,7 @@ class RegisterRepo {
   Future<ApiResponse> getTehsil(
       {required String stateId, required String districtId}) async {
     try {
-      Response response = await dioClient.post(ApiConstant.getTehsil,
+      Response response = await dioClient1.post(ApiConstant.getTehsil,
           data: {'state_id': stateId, 'district_id': districtId});
       return ApiResponse.withSuccess(response);
     } catch (e) {
@@ -59,7 +60,7 @@ class RegisterRepo {
 
   Future<ApiResponse> getBlock({required String tehsilId}) async {
     try {
-      Response response = await dioClient
+      Response response = await dioClient1
           .post(ApiConstant.getBlock, data: {'tehsil_id': tehsilId});
       return ApiResponse.withSuccess(response);
     } catch (e) {
@@ -69,7 +70,7 @@ class RegisterRepo {
 
   Future<ApiResponse> getMunicipality({required String tehsilId}) async {
     try {
-      Response response = await dioClient
+      Response response = await dioClient1
           .post(ApiConstant.getMunicipality, data: {'tehsil_id': tehsilId});
       return ApiResponse.withSuccess(response);
     } catch (e) {
@@ -80,7 +81,7 @@ class RegisterRepo {
   Future<ApiResponse> getWard({required WardModelParams model}) async {
     try {
       Response response =
-          await dioClient.post(ApiConstant.getWard, data: model.toJson());
+          await dioClient1.post(ApiConstant.getWard, data: model.toJson());
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
@@ -89,7 +90,7 @@ class RegisterRepo {
 
   Future<ApiResponse> getParliamentry({required String stateId}) async {
     try {
-      Response response = await dioClient
+      Response response = await dioClient1
           .post(ApiConstant.getParliamentry, data: {'state_id': stateId});
       return ApiResponse.withSuccess(response);
     } catch (e) {
@@ -100,7 +101,7 @@ class RegisterRepo {
   Future<ApiResponse> getAssembly(
       {required String stateId, required String districtId}) async {
     try {
-      Response response = await dioClient.post(ApiConstant.getAssembly,
+      Response response = await dioClient1.post(ApiConstant.getAssembly,
           data: {'state_id': stateId, 'district_id': districtId});
       return ApiResponse.withSuccess(response);
     } catch (e) {
@@ -114,7 +115,7 @@ class RegisterRepo {
       required String tehsilId,
       required String blockId}) async {
     try {
-      Response response = await dioClient.post(ApiConstant.getCity, data: {
+      Response response = await dioClient1.post(ApiConstant.getCity, data: {
         'state_id': stateId,
         'district_id': districtId,
         'tehsil_id': tehsilId,
@@ -129,7 +130,7 @@ class RegisterRepo {
   Future<ApiResponse> register(
       {required RegisterModelParams registerModelParams}) async {
     try {
-      Response response = await dioClient.post(ApiConstant.register,
+      Response response = await dioClient1.post(ApiConstant.register,
           data: registerModelParams.toJson());
       return ApiResponse.withSuccess(response);
     } catch (e) {
@@ -139,7 +140,7 @@ class RegisterRepo {
 
   Future<ApiResponse> getTownOrVillage({required String tehsilId}) async {
     try {
-      Response response = await dioClient
+      Response response = await dioClient1
           .post(ApiConstant.getTownOrVillage, data: {'tehsil_id': tehsilId});
       return ApiResponse.withSuccess(response);
     } catch (e) {
@@ -149,7 +150,7 @@ class RegisterRepo {
 
   Future<ApiResponse> getPanchayatWard({required String tehsilId}) async {
     try {
-      Response response = await dioClient
+      Response response = await dioClient1
           .post(ApiConstant.getPanchayatWard, data: {'tehsil_id': tehsilId});
       return ApiResponse.withSuccess(response);
     } catch (e) {
@@ -159,7 +160,7 @@ class RegisterRepo {
 
   Future<ApiResponse> getThana({required String tehsilId}) async {
     try {
-      Response response = await dioClient
+      Response response = await dioClient1
           .post(ApiConstant.getThana, data: {'tehsil_id': tehsilId});
       return ApiResponse.withSuccess(response);
     } catch (e) {
@@ -169,7 +170,7 @@ class RegisterRepo {
 
   Future<ApiResponse> getPostOffice({required String tehsilId}) async {
     try {
-      Response response = await dioClient
+      Response response = await dioClient1
           .post(ApiConstant.getPostOffice, data: {'tehsil_id': tehsilId});
       return ApiResponse.withSuccess(response);
     } catch (e) {

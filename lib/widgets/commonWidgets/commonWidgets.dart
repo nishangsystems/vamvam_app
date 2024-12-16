@@ -1,6 +1,8 @@
 // ignore_for_file: file_names, unnecessary_null_comparison
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bounce/flutter_bounce.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -14,6 +16,7 @@ import 'package:vam_vam/providers/locationMapProvider.dart';
 import 'package:vam_vam/providers/parentProvider.dart';
 import 'package:vam_vam/providers/profileprovider.dart';
 import 'package:vam_vam/providers/roleProvider.dart';
+import 'package:vam_vam/screens/modules/search/search_widget.dart';
 import 'package:vam_vam/utils/fontConstant.dart';
 import 'package:vam_vam/utils/paddingConstant.dart';
 import 'package:vam_vam/widgets/commonWidgets/textStyle.dart';
@@ -26,6 +29,7 @@ import '../../screens/loader/loaderOverlay.dart';
 import '../../utils/colors.dart';
 import '../../utils/constant.dart';
 import '../../utils/imageResources.dart';
+import '../../utils/schoolPreference.dart';
 import '../../utils/stringResources.dart';
 import 'appDesign.dart';
 
@@ -41,13 +45,12 @@ Widget loginHeaderContainer(BuildContext context) => Container(
       width: ResponsiveHelper.width(context),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.only(bottomRight: Radius.circular(180)),
-          image: DecorationImage(
-              image: AssetImage(ImageResources.splashBgImg), fit: BoxFit.fill)),
+           color: primaryDark
+          ),
       child: Center(
           child: Image.asset(
         ImageResources.logo,
-        height: 45,
-        width: 190,
+        height: 100,
         fit: BoxFit.fill,
       )),
     );
@@ -264,7 +267,7 @@ Widget homeAppbar({
                     ? role.roleType == getRoleType(RoleEnum.student)
                         ? 'Student'
                         : role.roleType == getRoleType(RoleEnum.teacher)
-                            ? 'Teacher'
+                            ? 'Lecturer'
                             : 'Parent'
                     : Provider.of<ProfileProvider>(context, listen: true)
                             .userProfileInfo
@@ -272,7 +275,7 @@ Widget homeAppbar({
                         (role.roleType == getRoleType(RoleEnum.student)
                             ? 'Student'
                             : role.roleType == getRoleType(RoleEnum.teacher)
-                                ? 'Teacher'
+                                ? 'Lecturer'
                                 : 'Parent'),
                 radius: 0,
                 fontsize: 16,
@@ -286,134 +289,131 @@ Widget homeAppbar({
       // flexibleSpace: ,
       title: Consumer4<ProfileProvider, LocationMapProvider, AuthProvider,
               RoleProvider>(
-          builder: (context, provider, location, auth, role, child) =>
+          builder: (context, provider, location, auth, role, child){
+
+            return
               role.roleType != getRoleType(RoleEnum.student)
                   ? GestureDetector(
-                      onTap: () {
-                        if (auth.isLoggedIn()) {
-                          context.push(profileDetails);
-                        } else {
-                          warningToast(msg: 'Please login');
-                          context.go(splash);
-                        }
-                      },
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        // mainAxisAlignment: MainAxisAlignment.start,
+                onTap: () {
+                  if (auth.isLoggedIn()) {
+                    context.push(profileDetails);
+                  } else {
+                    warningToast(msg: 'Please login');
+                    context.go(splash);
+                  }
+                },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  // mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                        provider.userProfileInfo.name == null ||
+                            provider.userProfileInfo.name!.isEmpty
+                            ? (role.roleType ==
+                            getRoleType(RoleEnum.student)
+                            ? 'Student'
+                            : role.roleType ==
+                            getRoleType(RoleEnum.teacher)
+                            ? 'Lecturer'
+                            : 'Parent')
+                            : provider.userProfileInfo.name ?? '',
+                        maxLines: 1,
+                        style: TextStyle(
+                            fontSize: role.roleType ==
+                                getRoleType(RoleEnum.student)
+                                ? 12
+                                : 14,
+                            fontWeight: FontWeight.w600)),
+                    if( provider.userProfileInfo.matric != null)...[
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        // mainAxisAlignment: MainAxisAlignment.,
                         children: [
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                              provider.userProfileInfo.name == null ||
-                                      provider.userProfileInfo.name!.isEmpty
-                                  ? (role.roleType ==
-                                          getRoleType(RoleEnum.student)
-                                      ? 'Student'
-                                      : role.roleType ==
-                                              getRoleType(RoleEnum.teacher)
-                                          ? 'Teacher'
-                                          : 'Parent')
-                                  : provider.userProfileInfo.name ?? '',
-                              maxLines: 1,
-                              style: TextStyle(
-                                  fontSize: role.roleType ==
-                                          getRoleType(RoleEnum.student)
-                                      ? 12
-                                      : 14,
+                          Text('Matricule : ',
+                              maxLines: 2,
+                              style: const TextStyle(
+                                  fontSize: 12,
                                   fontWeight: FontWeight.w600)),
-
-                          // Matricule
-                          // if (provider.userProfileInfo != null &&
-                          //         provider.userProfileInfo.userUniqueId != null
-                          //     // provider.userProfileInfo.isProfileComplete == '1' &&
-                          //     // provider.userProfileInfo.districtName != null
-                          //     ) ...[
-                          //   SizedBox(
-                          //     height: 5,
-                          //   ),
-                          //   Row(
-                          //     crossAxisAlignment: CrossAxisAlignment.center,
-                          //     // mainAxisAlignment: MainAxisAlignment.,
-                          //     children: [
-                          //       Text('Matricule: ',
-                          //           maxLines: 2,
-                          //           style: const TextStyle(
-                          //               fontSize: 12,
-                          //               fontWeight: FontWeight.w600)),
-                          //       SizedBox(
-                          //         width: 5,
-                          //       ),
-                          //       Expanded(
-                          //         child: Text(
-                          //             '${provider.userProfileInfo.userUniqueId}',
-                          //             maxLines: 1,
-                          //             style: const TextStyle(
-                          //                 fontSize: 12,
-                          //                 fontWeight: FontWeight.w400)),
-                          //       ),
-                          //     ],
-                          //   ),
-
-                          // Academic Year
-                          // if (provider.studentProfileModel.currentYear != null)
-                          //   Row(
-                          //     crossAxisAlignment: CrossAxisAlignment.center,
-                          //     // mainAxisAlignment: MainAxisAlignment.,
-                          //     children: [
-                          //       Text('Academic Year: ',
-                          //           maxLines: 1,
-                          //           style: const TextStyle(
-                          //               fontSize: 12,
-                          //               fontWeight: FontWeight.w600)),
-                          //       SizedBox(
-                          //         width: 5,
-                          //       ),
-                          //       Expanded(
-                          //         child: Text(
-                          //             '${provider.studentProfileModel.currentYear}',
-                          //             maxLines: 2,
-                          //             style: const TextStyle(
-                          //                 fontSize: 12,
-                          //                 fontWeight: FontWeight.w400)),
-                          //       ),
-                          //     ],
-                          //   ),
-
-                          // Semester
-                          // if (provider.studentProfileModel.currentSemester !=
-                          //     null) ...[
-                          //   Row(
-                          //     crossAxisAlignment: CrossAxisAlignment.center,
-                          //     // mainAxisAlignment: MainAxisAlignment.,
-                          //     children: [
-                          //       if (provider
-                          //               .studentProfileModel.currentSemester !=
-                          //           null) ...[
-                          //         Text('Semester: ',
-                          //             maxLines: 1,
-                          //             style: const TextStyle(
-                          //                 fontSize: 12,
-                          //                 fontWeight: FontWeight.w600)),
-                          //         SizedBox(
-                          //           width: 5,
-                          //         ),
-                          //         Expanded(
-                          //           child: Text(
-                          //               '${provider.studentProfileModel.currentSemester}',
-                          //               maxLines: 1,
-                          //               style: const TextStyle(
-                          //                   fontSize: 12,
-                          //                   fontWeight: FontWeight.w400)),
-                          //         ),
-                          //       ],
-                          //     ],
-                          //   ),
-                          // ]
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Expanded(
+                            child: Text(
+                                '${provider.userProfileInfo.matric}',
+                                maxLines: 1,
+                                style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w400)),
+                          ),
                         ],
                       ),
-                    )
-                  : SizedBox.shrink()),
+                    ],
+                    // Academic Year
+                    if (provider.studentProfileModel.currentYear != null)
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        // mainAxisAlignment: MainAxisAlignment.,
+                        children: [
+                          Text('Academic Year: ',
+                              maxLines: 1,
+                              style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600)),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Expanded(
+                            child: Text(
+                                '${provider.studentProfileModel.currentYear}',
+                                maxLines: 2,
+                                style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w400)),
+                          ),
+                        ],
+                      ),
+
+                    // Semester
+                    if (provider.studentProfileModel.currentSemester !=
+                        null) ...[
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        // mainAxisAlignment: MainAxisAlignment.,
+                        children: [
+                          if (provider
+                              .studentProfileModel.currentSemester !=
+                              null) ...[
+                            Text('Semester : ',
+                                maxLines: 1,
+                                style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600)),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Expanded(
+                              child: Text(
+                                  '${provider.studentProfileModel.currentSemester}',
+                                  maxLines: 1,
+                                  style: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400)),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ]
+                  ],
+                ),
+              )
+                  : SizedBox.shrink();
+          }),
       flexibleSpace: Consumer4<ProfileProvider, LocationMapProvider,
               AuthProvider, RoleProvider>(
           builder: (context, provider, location, auth, role, child) => role
@@ -437,17 +437,13 @@ Widget homeAppbar({
                         SizedBox(
                           height: 5,
                         ),
-                        Text(provider.userProfileInfo.name ?? 'Guest',
+                        Text(provider.userProfileInfo.name ?? '',
                             maxLines: 1,
                             style: const TextStyle(
                                 fontSize: 12, fontWeight: FontWeight.w600)),
 
                         // Matricule
-                        if (provider.userProfileInfo != null &&
-                                provider.userProfileInfo.userUniqueId != null
-                            // provider.userProfileInfo.isProfileComplete == '1' &&
-                            // provider.userProfileInfo.districtName != null
-                            ) ...[
+                        if( provider.userProfileInfo.matric != null)...[
                           SizedBox(
                             height: 5,
                           ),
@@ -455,7 +451,7 @@ Widget homeAppbar({
                             crossAxisAlignment: CrossAxisAlignment.center,
                             // mainAxisAlignment: MainAxisAlignment.,
                             children: [
-                              Text('Matricule: ',
+                              Text('Matricule : ',
                                   maxLines: 2,
                                   style: const TextStyle(
                                       fontSize: 12,
@@ -465,7 +461,7 @@ Widget homeAppbar({
                               ),
                               Expanded(
                                 child: Text(
-                                    '${provider.userProfileInfo.userUniqueId}',
+                                    '${provider.userProfileInfo.matric}',
                                     maxLines: 1,
                                     style: const TextStyle(
                                         fontSize: 12,
@@ -473,7 +469,69 @@ Widget homeAppbar({
                               ),
                             ],
                           ),
+                        ],
 
+                        if( provider.userProfileInfo.level_id != null)...[
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            // mainAxisAlignment: MainAxisAlignment.,
+                            children: [
+                              Text('Level : ',
+                                  maxLines: 2,
+                                  style: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600)),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Expanded(
+                                child: Text(
+                                    '${provider.userProfileInfo.level_id}',
+                                    maxLines: 1,
+                                    style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400)),
+                              ),
+                            ],
+                          ),
+                        ],
+
+                        if( provider.userProfileInfo.program_id != null)...[
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            // mainAxisAlignment: MainAxisAlignment.,
+                            children: [
+                              Text('Program : ',
+                                  maxLines: 2,
+                                  style: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600)),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Expanded(
+                                child: Text(
+                                    '${provider.userProfileInfo.program_id}',
+                                    maxLines: 1,
+                                    style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400)),
+                              ),
+                            ],
+                          ),
+                        ],
+
+                        if (provider.userProfileInfo != null &&
+                                provider.userProfileInfo.userUniqueId != null &&
+                        provider.studentProfileModel.currentYear != null
+
+                            ) ...[
                           // Academic Year
                           if (provider.studentProfileModel.currentYear != null)
                             Row(
@@ -570,8 +628,53 @@ Widget homeAppbar({
         ),
       ],
       shape: const RoundedRectangleBorder(
+        side: BorderSide(color: Color(0x220875C7), width: 1),
         borderRadius: BorderRadius.vertical(
           bottom: Radius.circular(35),
+        ),
+      ),
+    );
+
+Widget indexAppbar(context) => AppBar(
+      backgroundColor: primaryDark,
+      excludeHeaderSemantics: true,
+      clipBehavior: Clip.antiAlias,
+      flexibleSpace: Container(
+        height: 280,
+        width: double.infinity,
+        padding:
+            const EdgeInsets.only(top: 60, bottom: 10, left: 16, right: 16),
+        decoration: const BoxDecoration(
+          color: vamPrimaryColor,
+          borderRadius: BorderRadius.only(bottomRight: Radius.circular(50)),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Image.asset(
+                  ImageResources.logo,
+                  height: 50,
+                  fit: BoxFit.fill,
+                ),
+                IconButton(
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => SearchWidget()));
+                    },
+                    icon:
+                        Icon(Icons.search, color: white, size: 30, weight: 5)),
+              ],
+            )
+          ],
+        ),
+      ),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          bottomRight: Radius.circular(50),
         ),
       ),
     );
@@ -665,6 +768,16 @@ logoutDialog({required BuildContext context}) {
                         txtColor: white,
                         fontSize: 12,
                         onTap: () {
+                          SchoolPreference.getSchoolID().then((school_id) {
+                            var messaging = FirebaseMessaging.instance;
+                            messaging.unsubscribeFromTopic(
+                                'school_${school_id}_teachers');
+                            messaging.unsubscribeFromTopic(
+                                'school_${school_id}_general');
+                            messaging.unsubscribeFromTopic(
+                                'school_${school_id}_students');
+                          });
+
                           profile.clearUserDetails();
                           // Navigator.of(context).pop();
                           // auth.logoutvam_vam(context).then((value) {
@@ -1012,7 +1125,7 @@ Widget commonButtonText(
   );
 }
 
-double appBarHeight = 80;
+double appBarHeight = 86;
 
 Widget notDataFound(String? title) {
   return Center(

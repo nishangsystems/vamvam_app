@@ -10,9 +10,13 @@ class UserProfileModelData {
   String? voterId;
   String? aadhaarCard;
   String? name;
+  String? phone;
   String? gender;
   String? dob;
+  String? level_id;
+  String? program_id;
   String? guardianName;
+  String? matric;
   String? relation;
   String? mobile;
   String? email;
@@ -50,6 +54,8 @@ class UserProfileModelData {
     this.voterId,
     this.aadhaarCard,
     this.name,
+    this.matric,
+    this.phone,
     this.gender,
     this.dob,
     this.guardianName,
@@ -95,8 +101,12 @@ class UserProfileModelData {
     voterId = json['voter_id'];
     aadhaarCard = json['aadhaar_card'];
     name = json['name'];
+    phone = json['phone'];
+    matric = json['matric'];
     gender = json['gender'];
     dob = json['dob'];
+    level_id = json['level_id'].toString();
+    program_id = json['program_id'].toString();
     guardianName = json['guardian_name'];
     relation = json['relation'];
     mobile = json['mobile'];
@@ -141,6 +151,10 @@ class UserProfileModelData {
     data['voter_id'] = this.voterId;
     data['aadhaar_card'] = this.aadhaarCard;
     data['name'] = this.name;
+    data['phone'] = this.phone;
+    data['matric'] = this.matric;
+    data['level_id'] = this.level_id;
+    data['program_id'] = this.program_id;
     data['gender'] = this.gender;
     data['dob'] = this.dob;
     data['guardian_name'] = this.guardianName;

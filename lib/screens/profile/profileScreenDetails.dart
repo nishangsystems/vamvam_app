@@ -17,6 +17,7 @@ import '../../../../../widgets/commonWidgets/commonWidgets.dart';
 import '../../../../../widgets/commonWidgets/textStyle.dart';
 import '../../helpers/commonHelper.dart';
 import '../../providers/AuthProvider.dart';
+import '../../providers/registerProvider.dart';
 
 class ProfileScreenDetails extends StatefulWidget {
   const ProfileScreenDetails({super.key});
@@ -27,6 +28,21 @@ class ProfileScreenDetails extends StatefulWidget {
 
 class _ProfileScreenDetailsState extends State<ProfileScreenDetails> {
   var selectIndex = 0;
+
+  @override
+  void initState() {
+    var profile = Provider.of<ProfileProvider>(context, listen: false);
+    var register = Provider.of<RegisterProvider>(context, listen: false);
+    var role = Provider.of<RoleProvider>(context, listen: false);
+    var auth = Provider.of<AuthProvider>(context, listen: false);
+
+
+    profile
+        .getProfile(auth.getUserId(), register, role.roleType, context)
+        .then((value){});
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer2<ProfileProvider, RoleProvider>(
@@ -54,7 +70,7 @@ class _ProfileScreenDetailsState extends State<ProfileScreenDetails> {
                         children: [
                           Container(
                             alignment: Alignment.center,
-                            height: ResponsiveHelper.height(context) * 0.2,
+                            height: 200,
                             child: Stack(children: [
                               Padding(
                                 padding: const EdgeInsets.only(top: 25.0),
@@ -181,12 +197,12 @@ class _ProfileScreenDetailsState extends State<ProfileScreenDetails> {
                                       Text(
                                           role.roleType ==
                                                   getRoleType(RoleEnum.student)
-                                              ? '#${data.userProfileInfo.userUniqueId ?? '0'}'
+                                              ? '${data.userProfileInfo.matric ?? ''}'
                                               : role.roleType ==
                                                       getRoleType(
                                                           RoleEnum.teacher)
-                                                  ? '#${data.userProfileInfo.executiveUniqueId ?? '0'}'
-                                                  : '#${data.userProfileInfo.leaderUniqueId ?? '0'}',
+                                                  ? '#${data.userProfileInfo.phone ?? ''}'
+                                                  : '#${data.userProfileInfo.phone ?? ''}',
                                           style:
                                               commonTextStyle13(color: black)),
                                       const SizedBox(height: 5),

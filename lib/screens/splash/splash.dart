@@ -29,9 +29,6 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   _initFun() async {
-    // Provider.of<LocationMapProvider>(context, listen: false)
-    //     .determinePositionNew();
-    var auth = Provider.of<AuthProvider>(context, listen: false);
     var rol = Provider.of<RoleProvider>(context, listen: false);
     var profile = Provider.of<ProfileProvider>(context, listen: false);
     var reg = Provider.of<RegisterProvider>(context, listen: false);
@@ -41,38 +38,11 @@ class _SplashScreenState extends State<SplashScreen>
     if (rol.roleType == getRoleType(RoleEnum.student)) {
       appBarHeight = 100;
     }
-    Future.delayed(const Duration(seconds: 3), () {
-      if (auth.isLoggedIn()) {
-        profile
-            .getProfile(auth.getUserId(), reg, rol.roleType, context)
-            .then((value) {
-          if (value.isSuccess) {
-            if (rol.getRoleType() == getRoleType(RoleEnum.student)) {
-              profile.getStudentProfile(context).then((value) {
-                if (value.isSuccess) {
-                  context.go(userBottomHomeBar);
-                } else {
-                  context.go(role);
-                }
-              });
-            } else if (rol.getRoleType() == getRoleType(RoleEnum.parent)) {
-              context.go(paretnBottomHomeBar);
-            } else if (rol.getRoleType() == getRoleType(RoleEnum.teacher)) {
-              context.go(represantativeBottomHomeBar);
-            } else {
-              context.go(adminBottomHomeBar);
-            }
-          } else {
-            context.go(role);
-            // context.go(onBoarding);
-          }
-        });
+    Future.delayed(const Duration(seconds: 5), () {
+      if (rol.getOnBoarding()) {
+        context.go(homeScreen);
       } else {
-        if (rol.getOnBoarding()) {
-          context.go(role);
-        } else {
-          context.go(onBoarding);
-        }
+        context.go(onBoarding);
       }
     });
   }
@@ -87,10 +57,6 @@ class _SplashScreenState extends State<SplashScreen>
           padding: EdgeInsets.all(16),
           height: ResponsiveHelper.height(context),
           width: ResponsiveHelper.width(context),
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage(ImageResources.splashBgImg),
-                  fit: BoxFit.fill)),
           child: Center(
               child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -101,15 +67,20 @@ class _SplashScreenState extends State<SplashScreen>
               ),
               Image.asset(
                 ImageResources.splashIcon,
-                height: width,
-                width: width * 0.85,
+                width: 100,
+                fit: BoxFit.fill,
+              ),
+              Image.asset(
+                ImageResources.kunfu_pandaa,
+                width: 200,
                 fit: BoxFit.fill,
               ),
               Center(
                 child: Text(
                   'Powered by Nishang Systems',
                   style: TextStyle(
-                    color: Color(0xff0A2958),
+                    color: Color(0xff000000),
+                    fontSize: 20
                   ),
                 ),
               )

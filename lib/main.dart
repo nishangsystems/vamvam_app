@@ -1,5 +1,9 @@
 import 'dart:io';
 
+import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:go_router/go_router.dart';
+import 'package:vam_vam/providers/ParentAuthProvider.dart';
 import 'package:vam_vam/providers/courseProvider.dart';
 import 'package:vam_vam/providers/masterProvider.dart';
 import 'package:vam_vam/providers/parentProvider.dart';
@@ -9,7 +13,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -29,14 +32,19 @@ import 'package:vam_vam/providers/onBoardingProvider.dart';
 import 'package:vam_vam/providers/profileprovider.dart';
 import 'package:vam_vam/providers/registerProvider.dart';
 import 'package:vam_vam/providers/roleProvider.dart';
+import 'package:vam_vam/providers/schoolsProvider.dart';
 import 'package:vam_vam/providers/settingProvider.dart';
 import 'package:vam_vam/providers/splashProvider.dart';
 import 'package:vam_vam/providers/toDoProvider.dart';
 import 'package:vam_vam/screens/notification/PushNotificationsManager.dart';
+import 'package:vam_vam/screens/notification/notificationListScreen.dart';
 import 'package:vam_vam/utils/colors.dart';
+import 'package:vam_vam/utils/constant.dart';
 import 'package:vam_vam/utils/fontConstant.dart';
+import 'package:vam_vam/utils/schoolPreference.dart';
 import 'package:vam_vam/widgets/route/goRoute.dart';
 import 'diContainer.dart' as di;
+import 'firebase_options.dart';
 import 'http.dart';
 import 'providers/eventProvider.dart';
 import 'providers/profileDetailsProvider.dart';
@@ -54,12 +62,32 @@ const AndroidNotificationChannel channel = AndroidNotificationChannel(
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
+
 void main() async {
+
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    name: "VamVam",
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  await FirebaseAppCheck.instance.activate(
+    androidProvider: AndroidProvider.playIntegrity,
+  );
+
+  await FlutterDownloader.initialize();
+
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
   await _init();
+
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => di.sl<SchoolsProvider>()),
         ChangeNotifierProvider(create: (context) => di.sl<SplashProvider>()),
+        ChangeNotifierProvider(create: (context) => di.sl<ParentAuthProvider>()),
         ChangeNotifierProvider(
             create: (context) => di.sl<OnBoardingProvider>()),
         ChangeNotifierProvider(
@@ -103,15 +131,19 @@ void main() async {
   );
 }
 
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  await Firebase.initializeApp();
+
+  print("Handling a background message: ${message.messageId}");
+}
+
 _init() async {
   WidgetsFlutterBinding.ensureInitialized();
+  loadSchoolApiRoot();
   await di.init();
 
-  // Flutter Downloader
-  await FlutterDownloader.initialize(
-    debug: true,
-    ignoreSsl: true,
-  );
   HttpOverrides.global = MyHttpOverrides();
 
   await Permission.notification.isDenied.then((value) {
@@ -122,25 +154,19 @@ _init() async {
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-  await Firebase.initializeApp(
-      options: FirebaseOptions(
-          apiKey: Platform.isAndroid
-              ? 'AIzaSyDNx5VpXN2gcrbfxML1tyYSHYUfwST4cyA'
-              : 'AIzaSyDvtKOCN1ENw0mgggwlGRQy39sWhB2rx-g',
-          appId: Platform.isAndroid
-              ? '1:772996709358:android:eaf13c720b460a56026cff'
-              : '1:772996709358:ios:58da51f4a4745ef0026cff',
-          messagingSenderId: '772996709358',
-          projectId: 'biaka-b2945'));
 
-  FirebaseMessaging.onBackgroundMessage(_messageHandler);
 
-  // await NotificationHelper.initialize(flutterLocalNotificationsPlugin!);
-  // FirebaseMessaging.onBackgroundMessage(myBackgroundMessageHandler);
-  // FirebaseMessaging.onBackgroundMessage(_messageHandler);*/
-  // await  NotificationService().setupFirebase(flutterLocalNotificationsPlugin!);
-  // await NotificationHelper.initialize(flutterLocalNotificationsPlugin);
-  // FirebaseMessaging.onBackgroundMessage(myBackgroundMessageHandler);
+  // Handle foreground messages
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+
+      GoRoute(
+        path: notificationlistscreen,
+        builder: (context, state) => const NotificationListScreen(),
+      );
+    });
+
+  });
 }
 
 class MyApp extends StatefulWidget {
@@ -164,7 +190,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Vam Vam',
+      title: 'VamVam Uniport',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: FontRes.primary,

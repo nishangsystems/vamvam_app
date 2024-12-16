@@ -1,5 +1,6 @@
 // ignore_for_file: unused_field
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vam_vam/providers/HomeProvider.dart';
@@ -10,6 +11,7 @@ import 'package:vam_vam/providers/roleProvider.dart';
 import 'package:vam_vam/screens/loader/loaderOverlay.dart';
 import 'package:vam_vam/utils/colors.dart';
 import 'package:vam_vam/utils/imageResources.dart';
+import '../../../utils/schoolPreference.dart';
 import '../../../widgets/commonWidgets/commonWidgets.dart';
 import 'HomeScreen.dart';
 
@@ -30,6 +32,15 @@ class _UserBottomHomeBarState extends State<UserBottomHomeBar> {
   void initState() {
     super.initState();
     Future.microtask(() => _init());
+
+
+    SchoolPreference.getSchoolID().then((school_id){
+      FirebaseMessaging messaging = FirebaseMessaging.instance;
+      messaging.subscribeToTopic('school_${school_id}_students');
+      messaging.subscribeToTopic('school_${school_id}_general');
+    });
+
+
   }
 
   @override
@@ -38,7 +49,7 @@ class _UserBottomHomeBarState extends State<UserBottomHomeBar> {
       builder: (context, data, profile, child) => LoadingOverlay(
         isLoading: data.isLoading || profile.isLoading,
         child: Scaffold(
-          backgroundColor: primaryDark,
+          backgroundColor:  Colors.white,
           appBar: PreferredSize(
               preferredSize: Size.fromHeight(appBarHeight),
               child: homeAppbar(

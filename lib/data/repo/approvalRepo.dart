@@ -2,21 +2,22 @@ import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vam_vam/data/model/base/apiResponse.dart';
 import 'package:vam_vam/data/remote/dio/dioClient.dart';
+import 'package:vam_vam/data/remote/dio/dioClient1.dart';
 import 'package:vam_vam/data/remote/exception/apiErrorHandler.dart';
 import 'package:vam_vam/utils/apiConstant.dart';
 
 class ApprovalRepo {
-  final DioClient dioClient;
+  final DioClient1 dioClient1;
   final SharedPreferences prefs;
 
-  ApprovalRepo({required this.dioClient, required this.prefs});
+  ApprovalRepo({required this.dioClient1, required this.prefs});
 
   Future<ApiResponse> repRequestApproval(
       {required String executiveId,
       required String compalintId,
       required String message}) async {
     try {
-      Response response = await dioClient.post(ApiConstant.repRequestApproval,
+      Response response = await dioClient1.post(ApiConstant.repRequestApproval,
           data: {
             'executive_id': executiveId,
             'complaint_id': compalintId,
@@ -33,7 +34,7 @@ class ApprovalRepo {
       required int roleType,
       required String filterBy}) async {
     try {
-      Response response = await dioClient.post(
+      Response response = await dioClient1.post(
           ApiConstant.getRequestApproval(roleType),
           data: {'executive_id': executiveId, 'filter_by': filterBy});
       return ApiResponse.withSuccess(response);
@@ -48,7 +49,7 @@ class ApprovalRepo {
       required String message,
       required String id}) async {
     try {
-      Response response = await dioClient
+      Response response = await dioClient1
           .post(ApiConstant.leaderApprovalStatusChange, data: {
         'leader_id': leaderId,
         'status': status,

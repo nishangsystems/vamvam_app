@@ -10,22 +10,22 @@ import '../remote/dio/dioClient1.dart';
 import '../remote/exception/apiErrorHandler.dart';
 
 class AuthRepo {
-  final DioClient dioClient;
   final DioClient1 dioClient1;
   SharedPreferences prefs;
 
   AuthRepo(
-      {required this.dioClient, required this.prefs, required this.dioClient1});
+      {required this.prefs, required this.dioClient1});
 
   // Login
   Future<ApiResponse> login(
       {required LoginModelParams loginModelParams,
       required int roleType}) async {
     try {
-      Response response = await dioClient.post(ApiConstant.getLogin(roleType),
+      Response response = await dioClient1.post(ApiConstant.getLogin(roleType),
           data: loginModelParams.toJson());
       return ApiResponse.withSuccess(response);
-    } catch (e) {
+    } catch (e,st) {
+      print(st);
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
     }
   }
@@ -33,11 +33,14 @@ class AuthRepo {
   // Login -- vam_vam
   Future<ApiResponse> login1(
       {required String userName, required String password}) async {
+    print("00000000002");
     try {
       Response response = await dioClient1.get(ApiConstant.login1,
           data: {'matric': userName, 'password': password});
       return ApiResponse.withSuccess(response);
-    } catch (e) {
+    } catch (e, st) {
+      print(e);
+      print(st);
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
     }
   }
@@ -80,6 +83,7 @@ class AuthRepo {
   Future<ApiResponse> logout() async {
     try {
       Response response = await dioClient1.get(ApiConstant.logout);
+      ApiConstant.resetCurrentSchoolUrl();
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
@@ -91,7 +95,7 @@ class AuthRepo {
       {required VerifyOtpModelParams verifyOtpModelParams,
       required int roleType}) async {
     try {
-      Response response = await dioClient.post(
+      Response response = await dioClient1.post(
           ApiConstant.getVerifyOtp(roleType),
           data: verifyOtpModelParams.toJson());
       return ApiResponse.withSuccess(response);
@@ -105,9 +109,9 @@ class AuthRepo {
     String token,
     String id,
   ) async {
-    dioClient.token = token;
-    dioClient.id = id;
-    dioClient.dio.options.headers = {
+    dioClient1.token = token;
+    dioClient1.id = id;
+    dioClient1.dio.options.headers = {
       'Content-Type': 'application/json; charset=UTF-8',
       'id': id,
       'authorizationToken': token,
@@ -125,14 +129,15 @@ class AuthRepo {
     String id,
   ) async {
     dioClient1.token = 'Bearer $token';
-    // dioClient1.id = id;
+    dioClient1.id = id;
     dioClient1.dio.options.headers = {
       'Content-Type': 'application/json; charset=UTF-8',
+      'id': id,
       'Authorization': 'Bearer $token',
     };
     try {
-      await prefs.setString(ApiConstant.keyToken1, token);
-      // await prefs.setString(ApiConstant.keyUserId1, id);
+      await prefs.setString(ApiConstant.keyToken, token);
+      await prefs.setString(ApiConstant.keyUserId, id);
     } catch (e) {
       rethrow;
     }
@@ -178,8 +183,8 @@ class AuthRepo {
   Future<bool> clearSharedData() async {
     await prefs.remove(ApiConstant.keyToken);
     await prefs.remove(ApiConstant.keyUserId);
-    await prefs.remove(ApiConstant.keyToken1);
-    await prefs.remove(ApiConstant.keyUserId1);
+    // await prefs.remove(ApiConstant.keyToken1);
+    // await prefs.remove(ApiConstant.keyUserId1);
     return true;
   }
 }

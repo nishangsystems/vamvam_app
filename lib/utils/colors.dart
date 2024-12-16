@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
 
-const Color primaryDark = Color(0xFF3161E9);
-//const Color primaryDark = Color(0xFFe0f6fe);
-// const Color primaryLight = Color(0xFF3161E9);
-const Color primaryLight = Color(0xFF0875C7);
+const Color primaryDark = Color(0xff73580c);
+const Color primaryLight =Color(0xff73580c);
 const Color red = Color(0xFFFF2828);
 const Color black = Color(0xFF000000);
 const Color white = Color(0xFFFFFFFF);
 const Color grey = Color(0xFF848688);
-const Color powderPink = Color(0xFFFFF3FC);
-// const Color textColor = Color(0xff171347);
-const Color textColor = Color(0xff0A2958);
+const Color textColor = Color(0xff654D05);
 const Color textColor2 = Color(0xff676464);
 const Color orange = Color(0xffFF8E0A);
-const Color textColorButton = Color(0xff171347);
+const Color textColorButton = Color(0xff73580c);
 const Color backButton = Color(0xff1C1B1F);
-const Color otpLightButton = Color(0xff3161e9);
+const Color otpLightButton = Color(0xff73580c);
 const Color colorRed = Color(0xffe05316);
 const Color green = Color(0xff09b27f);
 const Color lightTextColor = Color(0xff6D6E71);
@@ -30,7 +26,12 @@ const Color colorSecondry = Color(0xff3da6af);
 const Color colorcarddetails = Color(0xffececec);
 const Color orangeHeader = Color(0xffFF985B);
 
-const Color vamPrimaryColor = Color(0xff0A2958);
+const Color vamPrimaryColor = Color(0xff654D05);
 const Color vamBorderColor = Color.fromRGBO(10, 41, 88, 0.1);
-const Color vamTextColor = Color.fromRGBO(10, 41, 88, 1);
+const Color vamTextColor = Color(0xff654D05);
 const Color vamSecondaryColor = Color(0xffFF985B);
+
+const Color vamPrimaryColorLight = Color(0x3b8888b4);
+const Color vamPrimaryColorRed = Color(0x3bad469a);
+const Color vamPrimary2 = Color(0xe0654D05);
+const Color vamSearchBgColor = Color(0xE5EFEFFC);

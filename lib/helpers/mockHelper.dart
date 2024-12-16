@@ -85,11 +85,11 @@ class MockHelper {
       'image': IconResource.profileIcon2,
       'title': StringResources.aboutUS,
     },
-    {
-      'index': 6,
-      'image': IconResource.profileIcon2,
-      'title': 'Rate Us',
-    },
+    // {
+    //   'index': 6,
+    //   'image': IconResource.profileIcon2,
+    //   'title': 'Rate Us',
+    // },
   ];
 
   static const List eventList = [

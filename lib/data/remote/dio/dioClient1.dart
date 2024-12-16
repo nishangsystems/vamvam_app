@@ -5,11 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../utils/apiConstant.dart';
-import 'loggingInterceptor.dart';
 
 class DioClient1 {
   final String baseUrl;
-  final LoggingInterceptor? loggingInterceptor;
   final SharedPreferences? sharedPreferences;
 
   late Dio dio;
@@ -19,30 +17,29 @@ class DioClient1 {
   DioClient1(
     this.baseUrl,
     Dio dioC, {
-    this.loggingInterceptor,
     this.sharedPreferences,
   }) {
-    if (sharedPreferences!.containsKey(ApiConstant.keyUserId1)) {
-      id = sharedPreferences!.getString(ApiConstant.keyUserId1)!;
+    if (sharedPreferences!.containsKey(ApiConstant.keyUserId)) {
+      id = sharedPreferences!.getString(ApiConstant.keyUserId)!;
       debugPrint('USER_ID>> $id');
     }
-    if (sharedPreferences!.containsKey(ApiConstant.keyToken1)) {
-      token = sharedPreferences!.getString(ApiConstant.keyToken1)!;
+    if (sharedPreferences!.containsKey(ApiConstant.keyToken)) {
+      token = sharedPreferences!.getString(ApiConstant.keyToken)!;
       debugPrint("USER_TOKEN>> $token");
     }
 
     dio = dioC;
     dio
+    ..options.connectTimeout = Duration(seconds: 10)
+      ..options.receiveTimeout = Duration(seconds: 10)
       ..options.baseUrl = baseUrl
-      ..options.connectTimeout = Duration(milliseconds: 30000)
-      ..options.receiveTimeout = Duration(milliseconds: 30000)
       ..httpClientAdapter
       ..options.headers = {
         'Content-Type': 'application/json; charset=UTF-8',
-        // 'id': id,
+        'id': id,
         'Authorization': "Bearer $token",
       };
-    dio.interceptors.add(loggingInterceptor!);
+
   }
 
   Future<Response> get(
@@ -53,7 +50,8 @@ class DioClient1 {
     CancelToken? cancelToken,
     ProgressCallback? onReceiveProgress,
   }) async {
-    debugPrint('BASE___URL>>>>> $baseUrl');
+    dio.options.baseUrl = ApiConstant.currentSchoolUrl;
+    debugPrint('MAIN___BASE___URL>>>>> ${dio.options.baseUrl}');
     try {
       var response = await dio.get(
         uri,
@@ -83,7 +81,9 @@ class DioClient1 {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    debugPrint('BASE___URL>>>>> $baseUrl');
+    dio.options.baseUrl = ApiConstant.currentSchoolUrl;
+    debugPrint('MAIN___BASE___URL>>>>> ${dio.options.baseUrl}');
+
     try {
       var response = await dio.post(
         uri,
@@ -111,6 +111,8 @@ class DioClient1 {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
+    dio.options.baseUrl = ApiConstant.currentSchoolUrl;
+    debugPrint('MAIN___BASE___URL>>>>> ${dio.options.baseUrl}');
     try {
       var response = await dio.put(
         uri,
@@ -136,6 +138,9 @@ class DioClient1 {
     Options? options,
     CancelToken? cancelToken,
   }) async {
+    dio.options.baseUrl = ApiConstant.currentSchoolUrl;
+    // debugPrint('MAIN___BASE___URL>>>>> $baseUrl');
+    debugPrint('MAIN___BASE___URL>>>>> ${dio.options.baseUrl}');
     try {
       var response = await dio.delete(
         uri,

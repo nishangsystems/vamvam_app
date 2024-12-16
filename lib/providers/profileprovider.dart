@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:googleapis/gkehub/v1.dart';
 import 'package:vam_vam/data/model/params/updateProfileModelParams.dart';
 import 'package:vam_vam/data/repo/profileRepo.dart';
 import 'package:vam_vam/helpers/dialogHelper.dart';
@@ -23,6 +24,7 @@ class ProfileProvider extends ChangeNotifier {
   UserProfileModelData get userProfileInfo => _userProfileInfo;
 
   StudentProfileModel _studentProfileModel = StudentProfileModel();
+
   StudentProfileModel get studentProfileModel => _studentProfileModel;
 
   bool _isLoading = false;
@@ -32,6 +34,7 @@ class ProfileProvider extends ChangeNotifier {
     _isLoading = value;
     notifyListeners();
   }
+
 
   clearUserDetails() {
     _userProfileInfo = UserProfileModelData();
@@ -124,25 +127,28 @@ class ProfileProvider extends ChangeNotifier {
   Future<ResponseModel> getProfile(String userId, RegisterProvider register,
       int roleType, BuildContext context,
       {String? isFirst}) async {
-    startLoader(true);
+
+
+   // startLoader(true);
     ApiResponse apiResponse =
         await profileRepo.getProfile(userId: userId, roleType: roleType);
     ResponseModel responseModel;
 
     if (apiResponse.response != null &&
         apiResponse.response!.statusCode == 200) {
-      Map map = apiResponse.response!.data;
-      if (map['code'] != successCode) {
-        if (map['message'] == unAuthonticated) {
-          unAuthenticatedPopUp(context: context);
-        }
-        responseModel = ResponseModel(false, map['message']);
-      } else {
-        _userProfileInfo = UserProfileModelData.fromJson(map['data']);
-        notifyListeners();
-        setUserDetails(register, roleType, context, isFirst: isFirst);
-        responseModel = ResponseModel(true, map['message']);
-      }
+     if(roleType != getRoleType(RoleEnum.student)){
+       Map map = apiResponse.response!.data;
+       _userProfileInfo = UserProfileModelData.fromJson(map['user']);
+       notifyListeners();
+       setUserDetails(register, roleType, context, isFirst: isFirst);
+       responseModel = ResponseModel(true, "");
+     }else{
+       Map map = apiResponse.response!.data;
+       _userProfileInfo = UserProfileModelData.fromJson(map['student']);
+       notifyListeners();
+       setUserDetails(register, roleType, context, isFirst: isFirst);
+       responseModel = ResponseModel(true, "");
+     }
     } else {
       String errorMessage;
       if (apiResponse.error is String) {
@@ -152,7 +158,7 @@ class ProfileProvider extends ChangeNotifier {
       }
       responseModel = ResponseModel(false, errorMessage);
     }
-    notifyListeners();
+
     startLoader(false);
     return responseModel;
   }
@@ -167,12 +173,12 @@ class ProfileProvider extends ChangeNotifier {
     if (apiResponse.response != null &&
         apiResponse.response!.statusCode == 200) {
       Map map = apiResponse.response!.data;
-      if (map['data'] == null) {
+      if (map['student'] == null) {
         responseModel =
             ResponseModel(false, map['message'] ?? 'Something Went Wrong');
       } else {
-        if (map['data'] != null) {
-          _studentProfileModel = StudentProfileModel.fromJson(map['data']);
+        if (map['student'] != null) {
+          _studentProfileModel = StudentProfileModel.fromJson(map['student']);
         }
         responseModel = ResponseModel(true, 'Success');
       }

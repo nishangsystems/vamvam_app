@@ -1,32 +1,13 @@
 {
   "project_info": {
-    "project_number": "772996709358",
-    "project_id": "biaka-b2945",
-    "storage_bucket": "biaka-b2945.appspot.com"
+    "project_number": "882737043147",
+    "project_id": "vamvam-54cac",
+    "storage_bucket": "vamvam-54cac.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:772996709358:android:ce6473bb8fdd6b53026cff",
-        "android_client_info": {
-          "package_name": "com.biaka.app"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDNx5VpXN2gcrbfxML1tyYSHYUfwST4cyA"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:772996709358:android:eaf13c720b460a56026cff",
+        "mobilesdk_app_id": "1:882737043147:android:7d04606d2b2fad605ced4e",
         "android_client_info": {
           "package_name": "com.vam.vam"
         }
@@ -34,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDNx5VpXN2gcrbfxML1tyYSHYUfwST4cyA"
+          "current_key": "AIzaSyCyqQ9ygAlJu4qhuCnI7dMcHXY-Hglms3c"
         }
       ],
       "services": {

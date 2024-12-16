@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print, unused_local_variable, unused_field
 import 'package:flutter/material.dart';
 import 'package:flutter_bounce/flutter_bounce.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:provider/provider.dart';
 import 'package:vam_vam/helpers/dateTimeHelper.dart';
 import 'package:vam_vam/helpers/enumHelper.dart';
@@ -36,7 +37,7 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
         Provider.of<NotificationProvider>(context, listen: false);
     var auth = Provider.of<AuthProvider>(context, listen: false);
     if (role.roleType == getRoleType(RoleEnum.student)) {
-      notification.getnotificationList(auth.getUserId());
+      notification.getStudentNotificationList(auth.getUserId());
     } else if (role.roleType == getRoleType(RoleEnum.teacher)) {
       notification.getrepnotificationList(auth.getUserId());
     } else {
@@ -109,50 +110,50 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
                   // const SizedBox(
                   //   height: 10,
                   // ),
-                  if (data.usernotificationList.isNotEmpty ||
-                      data.repnotificationList.isNotEmpty ||
-                      data.leadernotificationList.isNotEmpty) ...[
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: Padding(
-                        padding: EdgeInsets.only(right: 14),
-                        child: Bounce(
-                          duration: Duration(milliseconds: 100),
-                          onPressed: () {
-                            data
-                                .updateNotification(
-                              userId: auth.getUserId(),
-                              roleType: role.roleType,
-                              type: 'alldelete',
-                              context: context,
-                            )
-                                .then((value) {
-                              if (value.isSuccess) {
-                                if (role.roleType ==
-                                    getRoleType(RoleEnum.student)) {
-                                  data.getnotificationList(auth.getUserId());
-                                } else if (role.roleType ==
-                                    getRoleType(RoleEnum.teacher)) {
-                                  data.getrepnotificationList(auth.getUserId());
-                                } else {
-                                  data.getleadernotificationList(
-                                      auth.getUserId());
-                                }
-
-                                successToast(msg: value.message);
-                              } else {
-                                errorToast(msg: value.message);
-                              }
-                            });
-                          },
-                          child: Text(
-                            'Clear All',
-                            style: TextStyle(fontSize: 14, color: white),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                  // if (data.usernotificationList.isNotEmpty ||
+                  //     data.repnotificationList.isNotEmpty ||
+                  //     data.leadernotificationList.isNotEmpty) ...[
+                  //   Align(
+                  //     alignment: Alignment.topRight,
+                  //     child: Padding(
+                  //       padding: EdgeInsets.only(right: 14),
+                  //       child: Bounce(
+                  //         duration: Duration(milliseconds: 100),
+                  //         onPressed: () {
+                  //           data
+                  //               .updateNotification(
+                  //             userId: auth.getUserId(),
+                  //             roleType: role.roleType,
+                  //             type: 'alldelete',
+                  //             context: context,
+                  //           )
+                  //               .then((value) {
+                  //             if (value.isSuccess) {
+                  //               if (role.roleType ==
+                  //                   getRoleType(RoleEnum.student)) {
+                  //                   data.getStudentNotificationList(auth.getUserId());
+                  //               } else if (role.roleType ==
+                  //                   getRoleType(RoleEnum.teacher)) {
+                  //                   data.getrepnotificationList(auth.getUserId());
+                  //               } else {
+                  //                  data.getleadernotificationList(
+                  //                     auth.getUserId());
+                  //               }
+                  //
+                  //               successToast(msg: value.message);
+                  //             } else {
+                  //               errorToast(msg: value.message);
+                  //             }
+                  //           });
+                  //         },
+                  //         child: Text(
+                  //           'Clear All',
+                  //           style: TextStyle(fontSize: 14, color: white),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ],
                   if (role.roleType == getRoleType(RoleEnum.student)) ...[
                     Expanded(
                         child: ListView.builder(
@@ -166,144 +167,119 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
                             physics: const AlwaysScrollableScrollPhysics(),
                             itemBuilder: (context, index) {
                               var item = data.usernotificationList[index];
-                              return Bounce(
-                                duration: Duration(milliseconds: 100),
-                                onPressed: () {
-                                  data
-                                      .updateNotification(
-                                          userId: auth.getUserId(),
-                                          roleType: role.roleType,
-                                          type: 'read',
-                                          context: context,
-                                          notificationId: item.id)
-                                      .then((value) {
-                                    if (value.isSuccess) {
-                                      data.getnotificationList(
-                                          auth.getUserId());
-                                      successToast(msg: value.message);
-                                    } else {
-                                      errorToast(msg: value.message);
-                                    }
-                                  });
-                                },
-                                child: Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      vertical: PaddingConstant.m),
-                                  padding:
-                                      const EdgeInsets.all(PaddingConstant.m),
-                                  width: ResponsiveHelper.width(context),
-                                  decoration: BoxDecoration(
-                                      // color: white,
-                                      color: item.isRead == '0'
-                                          ? white.withOpacity(0.75)
-                                          : white,
-                                      borderRadius: BorderRadius.circular(8)),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        height: 30,
-                                        width: 5,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(50),
-                                            color: primaryDark),
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          SizedBox(
-                                            width: ResponsiveHelper.width(
+                              return Container(
+                                margin: const EdgeInsets.symmetric(
+                                    vertical: 5),
+                                padding:
+                                const EdgeInsets.all(PaddingConstant.m),
+                                width: ResponsiveHelper.width(context),
+                                decoration: BoxDecoration(
+                                  // color: white,
+                                    color: item.isRead == '0'
+                                        ? white.withOpacity(0.75)
+                                        : white,
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      height: 30,
+                                      width: 5,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                          BorderRadius.circular(50),
+                                          color: primaryDark),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          width: ResponsiveHelper.width(
+                                              context) -
+                                              71,
+                                          child: Row(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                            MainAxisAlignment
+                                                .spaceBetween,
+                                            children: [
+                                              SizedBox(
+                                                width: ResponsiveHelper.width(
                                                     context) -
-                                                71,
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                SizedBox(
-                                                  width: ResponsiveHelper.width(
-                                                          context) -
-                                                      100,
-                                                  child: Text(
-                                                    '${item.title}',
-                                                    // maxLines: 3,
-                                                    style: TextStyle(
-                                                        color: black,
-                                                        fontSize:
-                                                            FontConstant.m,
-                                                        fontWeight:
-                                                            FontWeight.w500),
-                                                  ),
+                                                    100,
+                                                child: Text(
+                                                  '${item.title}',
+                                                  // maxLines: 3,
+                                                  style: TextStyle(
+                                                      color: black,
+                                                      fontSize:
+                                                      FontConstant.m,
+                                                      fontWeight:
+                                                      FontWeight.w500),
                                                 ),
-                                                Bounce(
-                                                  duration: Duration(
-                                                      milliseconds: 100),
-                                                  onPressed: () {
-                                                    data
-                                                        .updateNotification(
-                                                            userId: auth
-                                                                .getUserId(),
-                                                            roleType:
-                                                                role.roleType,
-                                                            type: 'delete',
-                                                            context: context,
-                                                            notificationId:
-                                                                item.id)
-                                                        .then((value) {
-                                                      if (value.isSuccess) {
-                                                        data.getnotificationList(
-                                                            auth.getUserId());
-                                                        successToast(
-                                                            msg: value.message);
-                                                      } else {
-                                                        errorToast(
-                                                            msg: value.message);
-                                                      }
-                                                    });
-                                                  },
-                                                  child: Icon(
-                                                    Icons.delete_rounded,
-                                                    color: red,
-                                                  ),
-                                                )
-                                              ],
-                                            ),
+                                              ),
+                                              // Bounce(
+                                              //   duration: Duration(
+                                              //       milliseconds: 100),
+                                              //   onPressed: () {
+                                              //     data
+                                              //         .updateNotification(
+                                              //             userId: auth
+                                              //                 .getUserId(),
+                                              //             roleType:
+                                              //                 role.roleType,
+                                              //             type: 'delete',
+                                              //             context: context,
+                                              //             notificationId:
+                                              //                 item.id)
+                                              //         .then((value) {
+                                              //       if (value.isSuccess) {
+                                              //         data.getnotificationList(
+                                              //             auth.getUserId());
+                                              //         successToast(
+                                              //             msg: value.message);
+                                              //       } else {
+                                              //         errorToast(
+                                              //             msg: value.message);
+                                              //       }
+                                              //     });
+                                              //   },
+                                              //   child: Icon(
+                                              //     Icons.delete_rounded,
+                                              //     color: red,
+                                              //   ),
+                                              // )
+                                            ],
                                           ),
-                                          SizedBox(
+                                        ),
+                                        SizedBox(
                                             width: ResponsiveHelper.width(
-                                                    context) -
+                                                context) -
                                                 71,
-                                            child: Text(
-                                              '${item.message}',
-                                              maxLines: null,
-                                              style: TextStyle(
-                                                  color: lightTextColor,
-                                                  fontSize: FontConstant.m,
-                                                  fontWeight: FontWeight.w400),
-                                            ),
+                                            child:
+
+                                            HtmlWidget( '${item.message}')
+
+                                        ),
+                                        SizedBox(height: 5),
+                                        Text(
+                                          '${DateTimeHelper.timePassed(DateTime.parse(item.createdAt!), full: false)} ago',
+                                          maxLines: 2,
+                                          style: TextStyle(
+                                            color: lightTextColor,
+                                            fontSize: FontConstant.s,
+                                            fontWeight: FontWeight.w300,
+                                            height: 1.22,
+                                            letterSpacing: 0.70,
                                           ),
-                                          SizedBox(height: 5),
-                                          Text(
-                                            '${DateTimeHelper.timePassed(DateTime.parse(item.createdAt!), full: false)} ago',
-                                            maxLines: 2,
-                                            style: TextStyle(
-                                              color: lightTextColor,
-                                              fontSize: FontConstant.s,
-                                              fontWeight: FontWeight.w300,
-                                              height: 1.22,
-                                              letterSpacing: 0.70,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               );
                             })),
@@ -338,142 +314,115 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
                             physics: const AlwaysScrollableScrollPhysics(),
                             itemBuilder: (context, index) {
                               var item = data.repnotificationList[index];
-                              return Bounce(
-                                duration: Duration(milliseconds: 100),
-                                onPressed: () {
-                                  data
-                                      .updateNotification(
-                                          userId: auth.getUserId(),
-                                          roleType: role.roleType,
-                                          type: 'read',
-                                          context: context,
-                                          notificationId: item.id)
-                                      .then((value) {
-                                    if (value.isSuccess) {
-                                      data.getrepnotificationList(
-                                          auth.getUserId());
-                                      successToast(msg: value.message);
-                                    } else {
-                                      errorToast(msg: value.message);
-                                    }
-                                  });
-                                },
-                                child: Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      vertical: PaddingConstant.m),
-                                  padding:
-                                      const EdgeInsets.all(PaddingConstant.m),
-                                  decoration: BoxDecoration(
-                                      color: item.isRead == '0'
-                                          ? white.withOpacity(0.75)
-                                          : white,
-                                      borderRadius: BorderRadius.circular(8)),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        height: 30,
-                                        width: 5,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(50),
-                                            color: primaryDark),
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          SizedBox(
-                                            width: ResponsiveHelper.width(
-                                                    context) -
-                                                71,
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                SizedBox(
-                                                  width: ResponsiveHelper.width(
-                                                          context) -
-                                                      100,
-                                                  child: Text(
-                                                    '${item.title}',
-                                                    maxLines: null,
-                                                    style: TextStyle(
-                                                        color: black,
-                                                        fontSize:
-                                                            FontConstant.m,
-                                                        fontWeight:
-                                                            FontWeight.w500),
-                                                  ),
-                                                ),
-                                                Bounce(
-                                                  duration: Duration(
-                                                      milliseconds: 100),
-                                                  onPressed: () {
-                                                    data
-                                                        .updateNotification(
-                                                            userId: auth
-                                                                .getUserId(),
-                                                            roleType:
-                                                                role.roleType,
-                                                            type: 'delete',
-                                                            context: context,
-                                                            notificationId:
-                                                                item.id)
-                                                        .then((value) {
-                                                      if (value.isSuccess) {
-                                                        data.getrepnotificationList(
-                                                            auth.getUserId());
-                                                        successToast(
-                                                            msg: value.message);
-                                                      } else {
-                                                        errorToast(
-                                                            msg: value.message);
-                                                      }
-                                                    });
-                                                  },
-                                                  child: Icon(
-                                                    Icons.delete_rounded,
-                                                    color: red,
-                                                  ),
-                                                )
-                                              ],
-                                            ),
+                              return Container(
+                                margin: const EdgeInsets.symmetric(
+                                    vertical: 5),
+                                padding:
+                                const EdgeInsets.all(PaddingConstant.m),
+                                decoration: BoxDecoration(
+                                    color: item.isRead == '0'
+                                        ? white.withOpacity(0.75)
+                                        : white,
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      height: 30,
+                                      width: 5,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                          BorderRadius.circular(50),
+                                          color: primaryDark),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                      children: [
+                                        // SizedBox(
+                                        //   width: ResponsiveHelper.width(
+                                        //           context) -
+                                        //       71,
+                                        //   child: Row(
+                                        //     crossAxisAlignment:
+                                        //         CrossAxisAlignment.center,
+                                        //     mainAxisAlignment:
+                                        //         MainAxisAlignment
+                                        //             .spaceBetween,
+                                        //     children: [
+                                        //       SizedBox(
+                                        //         width: ResponsiveHelper.width(
+                                        //                 context) -
+                                        //             100,
+                                        //         child: Text(
+                                        //           '${item.title}',
+                                        //           maxLines: null,
+                                        //           style: TextStyle(
+                                        //               color: black,
+                                        //               fontSize:
+                                        //                   FontConstant.m,
+                                        //               fontWeight:
+                                        //                   FontWeight.w500),
+                                        //         ),
+                                        //       ),
+                                        //       Bounce(
+                                        //         duration: Duration(
+                                        //             milliseconds: 100),
+                                        //         onPressed: () {
+                                        //           data
+                                        //               .updateNotification(
+                                        //                   userId: auth
+                                        //                       .getUserId(),
+                                        //                   roleType:
+                                        //                       role.roleType,
+                                        //                   type: 'delete',
+                                        //                   context: context,
+                                        //                   notificationId:
+                                        //                       item.id)
+                                        //               .then((value) {
+                                        //             if (value.isSuccess) {
+                                        //               data.getrepnotificationList(
+                                        //                   auth.getUserId());
+                                        //               successToast(
+                                        //                   msg: value.message);
+                                        //             } else {
+                                        //               errorToast(
+                                        //                   msg: value.message);
+                                        //             }
+                                        //           });
+                                        //         },
+                                        //         child: Icon(
+                                        //           Icons.delete_rounded,
+                                        //           color: red,
+                                        //         ),
+                                        //       )
+                                        //     ],
+                                        //   ),
+                                        // ),
+                                        SizedBox(
+                                          width: ResponsiveHelper.width(
+                                              context) -
+                                              71,
+                                          child:         HtmlWidget( '${item.message}')
+
+                                        ),
+                                        SizedBox(height: 5),
+                                        Text(
+                                          '${DateTimeHelper.timePassed(DateTime.parse(item.createdAt!), full: false)} ago',
+                                          maxLines: 2,
+                                          style: TextStyle(
+                                            color: lightTextColor,
+                                            fontSize: FontConstant.s,
+                                            fontWeight: FontWeight.w300,
+                                            height: 1.22,
+                                            letterSpacing: 0.70,
                                           ),
-                                          SizedBox(
-                                            width: ResponsiveHelper.width(
-                                                    context) -
-                                                71,
-                                            child: Text(
-                                              '${item.message}',
-                                              maxLines: null,
-                                              style: TextStyle(
-                                                  color: lightTextColor,
-                                                  fontSize: FontConstant.m,
-                                                  fontWeight: FontWeight.w400),
-                                            ),
-                                          ),
-                                          SizedBox(height: 5),
-                                          Text(
-                                            '${DateTimeHelper.timePassed(DateTime.parse(item.createdAt!), full: false)} ago',
-                                            maxLines: 2,
-                                            style: TextStyle(
-                                              color: lightTextColor,
-                                              fontSize: FontConstant.s,
-                                              fontWeight: FontWeight.w300,
-                                              height: 1.22,
-                                              letterSpacing: 0.70,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               );
                             })),
@@ -507,142 +456,114 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
                             physics: const AlwaysScrollableScrollPhysics(),
                             itemBuilder: (context, index) {
                               var item = data.leadernotificationList[index];
-                              return Bounce(
-                                duration: Duration(milliseconds: 100),
-                                onPressed: () {
-                                  data
-                                      .updateNotification(
-                                          userId: auth.getUserId(),
-                                          roleType: role.roleType,
-                                          type: 'read',
-                                          context: context,
-                                          notificationId: item.id)
-                                      .then((value) {
-                                    if (value.isSuccess) {
-                                      data.getleadernotificationList(
-                                          auth.getUserId());
-                                      successToast(msg: value.message);
-                                    } else {
-                                      errorToast(msg: value.message);
-                                    }
-                                  });
-                                },
-                                child: Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      vertical: PaddingConstant.m),
-                                  padding:
-                                      const EdgeInsets.all(PaddingConstant.m),
-                                  decoration: BoxDecoration(
-                                      color: item.isRead == '0'
-                                          ? white.withOpacity(0.75)
-                                          : white,
-                                      borderRadius: BorderRadius.circular(8)),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        height: 30,
-                                        width: 5,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(50),
-                                            color: primaryDark),
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          SizedBox(
-                                            width: ResponsiveHelper.width(
+                              return Container(
+                                margin: const EdgeInsets.symmetric(
+                                    vertical: PaddingConstant.m),
+                                padding:
+                                const EdgeInsets.all(PaddingConstant.m),
+                                decoration: BoxDecoration(
+                                    color: item.isRead == '0'
+                                        ? white.withOpacity(0.75)
+                                        : white,
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      height: 30,
+                                      width: 5,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                          BorderRadius.circular(50),
+                                          color: primaryDark),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          width: ResponsiveHelper.width(
+                                              context) -
+                                              71,
+                                          child: Row(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                            MainAxisAlignment
+                                                .spaceBetween,
+                                            children: [
+                                              SizedBox(
+                                                width: ResponsiveHelper.width(
                                                     context) -
-                                                71,
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                SizedBox(
-                                                  width: ResponsiveHelper.width(
-                                                          context) -
-                                                      100,
-                                                  child: Text(
-                                                    '${item.title}',
-                                                    maxLines: null,
-                                                    style: TextStyle(
-                                                        color: black,
-                                                        fontSize:
-                                                            FontConstant.m,
-                                                        fontWeight:
-                                                            FontWeight.w500),
-                                                  ),
+                                                    100,
+                                                child: Text(
+                                                  '${item.title}',
+                                                  maxLines: null,
+                                                  style: TextStyle(
+                                                      color: black,
+                                                      fontSize:
+                                                      FontConstant.m,
+                                                      fontWeight:
+                                                      FontWeight.w500),
                                                 ),
-                                                Bounce(
-                                                  duration: Duration(
-                                                      milliseconds: 100),
-                                                  onPressed: () {
-                                                    data
-                                                        .updateNotification(
-                                                            userId: auth
-                                                                .getUserId(),
-                                                            roleType:
-                                                                role.roleType,
-                                                            type: 'delete',
-                                                            context: context,
-                                                            notificationId:
-                                                                item.id)
-                                                        .then((value) {
-                                                      if (value.isSuccess) {
-                                                        data.getleadernotificationList(
-                                                            auth.getUserId());
-                                                        successToast(
-                                                            msg: value.message);
-                                                      } else {
-                                                        errorToast(
-                                                            msg: value.message);
-                                                      }
-                                                    });
-                                                  },
-                                                  child: Icon(
-                                                    Icons.delete_rounded,
-                                                    color: red,
-                                                  ),
-                                                )
-                                              ],
-                                            ),
+                                              ),
+                                              Bounce(
+                                                duration: Duration(
+                                                    milliseconds: 100),
+                                                onPressed: () {
+                                                  data
+                                                      .updateNotification(
+                                                      userId: auth
+                                                          .getUserId(),
+                                                      roleType:
+                                                      role.roleType,
+                                                      type: 'delete',
+                                                      context: context,
+                                                      notificationId:
+                                                      item.id)
+                                                      .then((value) {
+                                                    if (value.isSuccess) {
+                                                      data.getleadernotificationList(
+                                                          auth.getUserId());
+                                                      successToast(
+                                                          msg: value.message);
+                                                    } else {
+                                                      errorToast(
+                                                          msg: value.message);
+                                                    }
+                                                  });
+                                                },
+                                                child: Icon(
+                                                  Icons.delete_rounded,
+                                                  color: red,
+                                                ),
+                                              )
+                                            ],
                                           ),
-                                          SizedBox(
-                                            width: ResponsiveHelper.width(
-                                                    context) -
-                                                71,
-                                            child: Text(
-                                              '${item.message}',
-                                              maxLines: null,
-                                              style: TextStyle(
-                                                  color: lightTextColor,
-                                                  fontSize: FontConstant.m,
-                                                  fontWeight: FontWeight.w400),
-                                            ),
+                                        ),
+                                        SizedBox(
+                                          width: ResponsiveHelper.width(
+                                              context) -
+                                              71,
+                                          child:         HtmlWidget( '${item.message}'),
+                                        ),
+                                        SizedBox(height: 5),
+                                        Text(
+                                          '${DateTimeHelper.timePassed(DateTime.parse(item.createdAt!), full: false)} ago',
+                                          maxLines: 2,
+                                          style: TextStyle(
+                                            color: lightTextColor,
+                                            fontSize: FontConstant.s,
+                                            fontWeight: FontWeight.w300,
+                                            height: 1.22,
+                                            letterSpacing: 0.70,
                                           ),
-                                          SizedBox(height: 5),
-                                          Text(
-                                            '${DateTimeHelper.timePassed(DateTime.parse(item.createdAt!), full: false)} ago',
-                                            maxLines: 2,
-                                            style: TextStyle(
-                                              color: lightTextColor,
-                                              fontSize: FontConstant.s,
-                                              fontWeight: FontWeight.w300,
-                                              height: 1.22,
-                                              letterSpacing: 0.70,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               );
                             })),

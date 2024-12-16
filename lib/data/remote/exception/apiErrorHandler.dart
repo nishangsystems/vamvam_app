@@ -16,15 +16,15 @@ class ApiErrorHandler {
               errorDescription = "Request to API server was cancelled";
               break;
             case DioErrorType.connectionTimeout:
-              errorDescription = "Connection timeout with API server";
+              errorDescription = "Connection timeout ";
               break;
             case DioErrorType.connectionError:
               errorDescription =
-                  "Connection to API server failed due to internet connection";
+                  "Check your internet connection";
               break;
             case DioErrorType.receiveTimeout:
               errorDescription =
-                  "Receive timeout in connection with API server";
+                  "Receive timeout when connecting ";
               break;
             case DioErrorType.badResponse:
               switch (error.response?.statusCode) {

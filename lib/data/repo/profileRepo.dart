@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vam_vam/data/model/params/updateProfileModelParams.dart';
 import 'package:vam_vam/data/remote/dio/dioClient.dart';
 
@@ -9,25 +10,62 @@ import '../remote/dio/dioClient1.dart';
 import '../remote/exception/apiErrorHandler.dart';
 
 class ProfileRepo {
-  final DioClient dioClient;
   final DioClient1 dioClient1;
 
-  ProfileRepo({required this.dioClient, required this.dioClient1});
+  ProfileRepo({required this.dioClient1});
 
   // Get Profile
   Future<ApiResponse> getProfile(
       {required String userId, required int roleType}) async {
     try {
-      Response response = await dioClient.post(ApiConstant.getProfile(roleType),
-          data: roleType == getRoleType(RoleEnum.student)
-              ? {'user_id': userId}
-              : roleType == getRoleType(RoleEnum.teacher)
-                  ? {'executive_id': userId}
-                  : roleType == getRoleType(RoleEnum.parent)
-                      ? {'parent_id': userId}
-                      : {'leader_id': userId});
-      return ApiResponse.withSuccess(response);
+
+      print(roleType == getRoleType(RoleEnum.student)
+          ? {'user_id': userId}
+          : roleType == getRoleType(RoleEnum.teacher)
+          ? {'executive_id': userId}
+          : roleType == getRoleType(RoleEnum.parent)
+          ? {'parent_id': userId}
+          : {'leader_id': userId});
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString(ApiConstant.keyToken)!;
+
+      if(roleType == getRoleType(RoleEnum.teacher)){
+
+        Response response = await dioClient1.get(ApiConstant.getProfile(roleType),
+            data: roleType == getRoleType(RoleEnum.student)
+                ? {'user_id': userId}
+                : roleType == getRoleType(RoleEnum.teacher)
+                ? {'teacher': userId}
+                : roleType == getRoleType(RoleEnum.parent)
+                ? {'parent_id': userId}
+                : {'leader_id': userId},
+            options: Options(headers:{'id': userId, 'Content-Type': 'application/json; charset=UTF-8',
+              'authorizationToken': "Bearer $token",} )
+        );
+        return ApiResponse.withSuccess(response);
+      }else{
+
+        Response response = await dioClient1.get(ApiConstant.getProfile(roleType),
+            data: roleType == getRoleType(RoleEnum.student)
+                ? {'user_id': userId}
+                : roleType == getRoleType(RoleEnum.teacher)
+                ? {'teacher': userId}
+                : roleType == getRoleType(RoleEnum.parent)
+                ? {'parent_id': userId}
+                : {'leader_id': userId},
+            options: Options(headers:{'id': userId, 'Content-Type': 'application/json; charset=UTF-8',
+              'authorizationToken': "Bearer $token",} )
+        );
+        return ApiResponse.withSuccess(response);
+      }
+
+
+
+
     } catch (e) {
+      print("///////////");
+      print(e);
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
     }
   }
@@ -38,6 +76,7 @@ class ProfileRepo {
       Response response = await dioClient1.get(
         ApiConstant.getStudentProfile,
       );
+
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage('$e'));
@@ -48,7 +87,7 @@ class ProfileRepo {
   Future<ApiResponse> updateProfile(
       {required UpdateProfileModelParams updateProfileModelParams}) async {
     try {
-      Response response = await dioClient.post(ApiConstant.updateProfile,
+      Response response = await dioClient1.post(ApiConstant.updateProfile,
           data: updateProfileModelParams.toJson());
       return ApiResponse.withSuccess(response);
     } catch (e) {

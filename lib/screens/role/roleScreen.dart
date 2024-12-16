@@ -12,7 +12,8 @@ import 'package:vam_vam/utils/fontConstant.dart';
 import 'package:vam_vam/utils/imageResources.dart';
 
 class RoleScreen extends StatefulWidget {
-  const RoleScreen({super.key});
+  final String schoolName;
+  RoleScreen({super.key, required this.schoolName});
 
   @override
   State<RoleScreen> createState() => _RoleScreenState();
@@ -45,19 +46,27 @@ class _RoleScreenState extends State<RoleScreen> {
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: SingleChildScrollView(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 100),
-                  Center(
-                    child: Text(
-                      'Select a role on VamVam',
-                      style: TextStyle(
-                          color: Color(0xff0A2958),
-                          fontWeight: FontWeight.w600,
-                          fontSize: FontConstant.xxl),
-                    ),
+                  Text(
+                    "VamVam Uniport for "+widget.schoolName,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: primaryDark,
+                        fontWeight: FontWeight.w600,
+                        fontSize: FontConstant.xxl),
                   ),
-                  SizedBox(height: 50),
+                  SizedBox(height: 90),
+                  Text(
+                    'Select a role',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                        color: Color(0xff0A2958),
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600),
+                  ),
+                  SizedBox(height: 10),
                   _commonWidget(
                       title: 'Student',
                       isSelected:
@@ -66,20 +75,20 @@ class _RoleScreenState extends State<RoleScreen> {
                       onTap: () {
                         auth.setType('mobile');
                         data.setRoleType(getRoleType(RoleEnum.student));
-                        context.push(login);
+                        context.push('$login/${widget.schoolName}');
                       }),
                   SizedBox(
                     height: 10,
                   ),
                   _commonWidget(
-                      title: 'Teacher',
+                      title: 'Lecturer',
                       image: ImageResources.executiveImg,
                       isSelected:
                           data.roleType == getRoleType(RoleEnum.teacher),
                       onTap: () {
                         auth.setType('mobile');
                         data.setRoleType(getRoleType(RoleEnum.teacher));
-                        context.push(login);
+                        context.push('$login/${widget.schoolName}');
                       }),
                   SizedBox(
                     height: 10,
@@ -91,20 +100,20 @@ class _RoleScreenState extends State<RoleScreen> {
                       onTap: () {
                         auth.setType('mobile');
                         data.setRoleType(getRoleType(RoleEnum.parent));
-                        context.push(login);
+                        context.push('$loginParent/${widget.schoolName}');
                       }),
                   SizedBox(
-                    height: 10,
+                    height: 40,
                   ),
-                  _commonWidget(
-                      title: 'Executive',
-                      image: ImageResources.executiveImg,
-                      isSelected: data.roleType == getRoleType(RoleEnum.leader),
-                      onTap: () {
-                        auth.setType('mobile');
-                        data.setRoleType(getRoleType(RoleEnum.leader));
-                        context.push(login);
-                      }),
+                  // _commonWidget(
+                  //     title: 'Executive',
+                  //     image: ImageResources.executiveImg,
+                  //     isSelected: data.roleType == getRoleType(RoleEnum.leader),
+                  //     onTap: () {
+                  //       auth.setType('mobile');
+                  //       data.setRoleType(getRoleType(RoleEnum.leader));
+                  //       context.push('$login/${widget.schoolName}');
+                  //     }),
                   // SizedBox(
                   //   height: 50,
                   // ),
@@ -146,7 +155,7 @@ class _RoleScreenState extends State<RoleScreen> {
             Text(
               title,
               style: TextStyle(
-                  color: isSelected ? primaryLight : Color(0xff0A2958),
+                  color: isSelected ? primaryLight : primaryDark,
                   fontWeight: FontWeight.w600,
                   fontSize: FontConstant.l),
             ),

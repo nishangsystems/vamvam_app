@@ -46,18 +46,18 @@ class UserNotificationData {
       this.isRead});
 
   UserNotificationData.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    type = json['type'];
+    id = json['id'].toString();
+    type = json['type']??"";
     title = json['title'];
     message = json['message'];
-    complaintId = json['complaint_id'];
+    complaintId = json['complaint_id']??"";
     createdAt = json['created_at'];
-    isRead = json['is_read'];
+    isRead = json['is_read']??"";
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
+    data['id'] = id.toString();
     data['type'] = type;
     data['title'] = title;
     data['message'] = message;

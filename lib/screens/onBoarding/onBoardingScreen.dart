@@ -76,8 +76,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: isSelected
-              ? Color(0xff0875C7)
-              : Color(0xff0875C7).withOpacity(0.2)),
+              ? primaryDark
+              : primaryDark.withOpacity(0.2)),
     );
   }
 
@@ -99,9 +99,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     BorderRadius.only(bottomRight: Radius.circular(180)),
                 child: Image.asset(
                   ImageResources.onBoardingImg1,
-                  height: ResponsiveHelper.height(context) - 350,
+                  height: ResponsiveHelper.height(context) - 402,
                   width: ResponsiveHelper.width(context),
-                  fit: BoxFit.fill,
+                  fit: BoxFit.fitWidth,
                 ),
               ),
             ],
@@ -124,9 +124,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     BorderRadius.only(bottomRight: Radius.circular(180)),
                 child: Image.asset(
                   ImageResources.onBoardingImg2,
-                  height: ResponsiveHelper.height(context) - 350,
+                  height: ResponsiveHelper.height(context) - 402,
                   width: ResponsiveHelper.width(context),
-                  fit: BoxFit.fill,
+                  fit: BoxFit.fitWidth,
                 ),
               ),
             ],
@@ -149,9 +149,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     BorderRadius.only(bottomRight: Radius.circular(180)),
                 child: Image.asset(
                   ImageResources.onBoardingImg3,
-                  height: ResponsiveHelper.height(context) - 350,
+                  height: ResponsiveHelper.height(context) - 402,
                   width: ResponsiveHelper.width(context),
-                  fit: BoxFit.fill,
+                  fit: BoxFit.fitWidth,
                 ),
               ),
             ],
@@ -216,18 +216,18 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                           maxLines: 2,
                           overflow: TextOverflow.clip,
                           style: TextStyle(
-                              color: Color(0xff0A2958),
+                              color: primaryDark,
                               fontWeight: FontWeight.w600,
-                              fontSize: FontConstant.xxl),
+                              fontSize: FontConstant.xl),
                           textAlign: TextAlign.center,
                         ),
                       ),
                     ),
                     SizedBox(
-                      height: 20,
+                      height: 10,
                     ),
                     commonButton(
-                        bgColor: Color(0xffFFB246),
+                        bgColor: primaryDark,
                         width: width,
                         isBorder: false,
                         radius: 8,
@@ -235,7 +235,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                           if (data.index == 2) {
                             rolePro.saveOnboarding();
                             rolePro.setRoleType(getRoleType(RoleEnum.student));
-                            context.go(role);
+                            context.go(homeScreen);
                           } else {
                             data.setIndex(data.index + 1);
                           }
@@ -253,14 +253,14 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       height: 20,
                     ),
                     commonButton(
-                        bgColor: Color(0xff0875C7),
+                        bgColor:primaryDark,
                         width: width,
                         isBorder: true,
                         radius: 8,
                         onTap: () {
                           rolePro.saveOnboarding();
                           rolePro.setRoleType(getRoleType(RoleEnum.student));
-                          context.go(role);
+                          context.go(homeScreen);
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8),
@@ -269,7 +269,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                   fontFamily: FontRes.primary,
-                                  color: Color(0xff0875C7))),
+                                  color: primaryDark)),
                         )),
                   ],
                 ),

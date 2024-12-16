@@ -7,7 +7,11 @@ double width = 0;
 const String splash = '/';
 const String onBoarding = '/onBoarding';
 const String login = '/login';
+const String loginParent = '/login_parent';
+const String homeScreen = '/home';
+const String searchScreen = '/search';
 const String verifyOTP = '/verifyOTP';
+const String verifyPhonePage = '/verify_phone';
 const String locationMapScreen = '/locationMapScreen';
 const String addComplain = '/addComplain';
 

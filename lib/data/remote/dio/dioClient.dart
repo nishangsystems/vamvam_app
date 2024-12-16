@@ -5,11 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../utils/apiConstant.dart';
-import 'loggingInterceptor.dart';
 
 class DioClient {
   final String baseUrl;
-  final LoggingInterceptor? loggingInterceptor;
   final SharedPreferences? sharedPreferences;
 
   late Dio dio;
@@ -19,7 +17,6 @@ class DioClient {
   DioClient(
     this.baseUrl,
     Dio dioC, {
-    this.loggingInterceptor,
     this.sharedPreferences,
   }) {
     if (sharedPreferences!.containsKey(ApiConstant.keyUserId)) {
@@ -42,7 +39,7 @@ class DioClient {
         'id': id,
         'authorizationToken': token,
       };
-    dio.interceptors.add(loggingInterceptor!);
+
   }
 
   Future<Response> get(

@@ -6,14 +6,12 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_maps_webservice/places.dart';
 import 'package:provider/provider.dart';
 import 'package:vam_vam/data/model/params/loginModelParams.dart';
 import 'package:vam_vam/data/repo/authRepo.dart';
 import 'package:vam_vam/helpers/enumHelper.dart';
 import 'package:vam_vam/providers/profileprovider.dart';
 import 'package:vam_vam/providers/registerProvider.dart';
-
 import '../data/model/base/apiResponse.dart';
 import '../data/model/base/responseModel.dart';
 import '../data/model/params/verifyOtpModelParams.dart';
@@ -54,8 +52,8 @@ class AuthProvider extends ChangeNotifier {
   TextEditingController get searchTextEditingController =>
       _searchTextEditingController;
 
-  final List<PlacesSearchResult> _searchAddressList = [];
-  List<PlacesSearchResult> get searchAddressList => _searchAddressList;
+  // final List<PlacesSearchResult> _searchAddressList = [];
+  // List<PlacesSearchResult> get searchAddressList => _searchAddressList;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -188,8 +186,8 @@ class AuthProvider extends ChangeNotifier {
       int roleType,
       BuildContext context) async {
     startLoader(true);
-    ApiResponse apiResponse = await authRepo.login(
-        loginModelParams: loginModelParams, roleType: roleType);
+
+    ApiResponse apiResponse = await authRepo.login(loginModelParams: loginModelParams, roleType: roleType);
     ResponseModel responseModel;
     if (apiResponse.response != null &&
         apiResponse.response!.statusCode == 200) {
@@ -235,8 +233,12 @@ class AuthProvider extends ChangeNotifier {
   Future<ResponseModel> login1(
       String userName, String password, BuildContext context) async {
     startLoader(true);
+
     ApiResponse apiResponse =
         await authRepo.login1(userName: userName, password: password);
+    print('//////////////////01');
+
+
     ResponseModel responseModel;
     if (apiResponse.response != null &&
         apiResponse.response!.statusCode == 200) {
@@ -247,20 +249,15 @@ class AuthProvider extends ChangeNotifier {
       } else {
         var data = map['user'];
         saveUserIdAndUserToken1(map['token'].toString(), data['id'].toString());
+
         await login(
                 LoginModelParams(
                     deviceType: Platform.isAndroid ? 'android' : 'ios',
                     deviceToken: _deviceToken,
-                    //  email: 'test@gmail.com',
-                    // mobile: '995609533',
-                    // username: 'test',
-                    // name: 'Test'
                     email: data['email'],
                     mobile: data['phone'],
                     username: data['matric'],
                     name: data['name']),
-                // authRepo.saveAcademicYear();
-                // authRepo.saveSemester();
                 Provider.of<ProfileProvider>(context, listen: false),
                 Provider.of<RegisterProvider>(context, listen: false),
                 getRoleType(RoleEnum.student),

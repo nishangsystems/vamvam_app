@@ -1,9 +1,17 @@
+import 'package:dio/dio.dart';
+import 'package:vam_vam/data/remote/dio/dioClient1.dart';
+import 'package:vam_vam/diContainer.dart';
 import 'package:vam_vam/helpers/enumHelper.dart';
+import 'package:vam_vam/utils/schoolPreference.dart';
 
 class ApiConstant {
   static const String baseUrl = 'http://biaka.alobhatech.com';
   // static const String baseUrl1 = 'https://bnb.stlouissystems.org';
   static const String baseUrl1 = 'https://bnb.stlouissystems.org';
+
+  static const String baseUrl2 = 'https://vamvam.nishangsystems.org';
+
+  static const String getSchools = '/api/schools';
 
   // User api
   static const String getReleation = '/api/user/relation';
@@ -21,10 +29,9 @@ class ApiConstant {
   static const String register = '/api/user/register';
   static const String login = '/api/user/login';
   static const String verifyOtp = '/api/user/verify-otp';
-  static const String myProfile = '/api/user/my-profile';
+  static const String myProfile = '/api/student/profile';
   static const String forgetPassword = '/api/user/forgot-password';
-  static const String forgetPasswordOtpVerify =
-      '/api/user/forgot-password-otp-verify';
+  static const String forgetPasswordOtpVerify ='/api/user/forgot-password-otp-verify';
   static const String forgetPasswordReset = '/api/user/forgot-password-reset';
   static const String updateProfile = '/api/user/update-profile';
   static const String banner = '/api/user/banner';
@@ -50,7 +57,7 @@ class ApiConstant {
   // Represantative api
   static const String repLogin = '/api/representative/login';
   static const String repVerifyOtp = '/api/representative/verify-otp';
-  static const String repMyProfile = '/api/representative/my-profile';
+  static const String repMyProfile = '/api/teacher/profile';
   static const String repBanner = '/api/representative/banner';
   static const String repForgetPassword = '/api/representative/forgot-password';
   static const String repForgetPasswordOtpVerify =
@@ -116,6 +123,7 @@ class ApiConstant {
   // Student api
   static const String login1 = '/api/login/student';
   static const String logout = '/api/logout/student';
+  static const String getSchool = '/api/student/school';
   static const String getBatch = '/api/student/years';
   static const String getSemester = '/api/student/semesters';
   static const String getLevels = '/api/student/levels';
@@ -129,11 +137,13 @@ class ApiConstant {
       '/api/student/registration/eligible';
   // static const String getCaResult = '/api/student/results/ca?semester=';
   static const String getExamResult = '/api/student/results/exam?semester=';
+  static const String getCaResult = '/api/student/results/ca?semester=';
   static const String downloadResult =
       '/api/student/results/exam/download?semester=';
   static const String getFees = '/api/student/fee';
   static const String getFaqs = '/api/student/faqs';
   static const String getStudentProfile = '/api/student/profile_details';
+  static const String getStudentCourses = '/api/student/notifications';
 
   // Teacher Apis
   static const String teacherLogin = '/api/login/teacher?email=';
@@ -151,6 +161,8 @@ class ApiConstant {
       '/api/teacher/student_profile?student=';
 
   // Parent Apis
+  static const String getYears = '/api/year';
+  static const String getParentSemester = '/api/parent/semesters';
   static const String parentBiakaLogin = '/api/parent/login';
   static const String parentBiakaProfile = '/api/parent/my-profile';
   static const String parentBiakaEvent = '/api/parent/event';
@@ -177,6 +189,45 @@ class ApiConstant {
   static const String keyOnboarding = '#osdnsdhbsdfoadfsasdkj';
   static const String academicYear = '#wrwefacademicyearfsdff';
   static const String semester = '#dfsfdfsemesterfsdfds';
+
+  // This will be the URL used throughout the app
+  static String currentSchoolUrl = "";
+
+  // Method to set the current school URL
+  static void setCurrentSchoolUrl(String apiRoot) {
+    currentSchoolUrl = apiRoot;
+    // remove /api at the end
+    if (currentSchoolUrl.endsWith('/api')) {
+      currentSchoolUrl = currentSchoolUrl.substring(0, currentSchoolUrl.length - 4);
+      SchoolPreference.saveSchoolApiRoot(currentSchoolUrl);
+    }
+
+    reinitializeDioClient();
+    print("current: $currentSchoolUrl");
+  }
+
+
+  // Method to set the current school ID
+  static void setCurrentSchoolID(String id) {
+    SchoolPreference.saveSchoolID(id);
+  }
+
+  // Method to reset the current school URL (e.g., on logout)
+  static void resetCurrentSchoolUrl() {
+    currentSchoolUrl = "";
+    SchoolPreference.clearSchoolApiRoot();
+    reinitializeDioClient();
+  }
+
+  static void reinitializeDioClient() {
+
+    sl.unregister<DioClient1>();  // Unregister the old DioClient1
+
+    print("api current school: ${ApiConstant.currentSchoolUrl}");
+    sl.registerFactory(() => DioClient1(
+        ApiConstant.currentSchoolUrl, sl<Dio>(instanceName: 'dio2'),
+     sharedPreferences: sl()));
+  }
 
   static String getLogin(int roleType) {
     return roleType == getRoleType(RoleEnum.student)

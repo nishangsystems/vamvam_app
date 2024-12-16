@@ -162,7 +162,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
           required List<Color> colors}) =>
       Container(
         decoration: BoxDecoration(
-            color: powderPink,
             borderRadius: BorderRadius.circular(17),
             gradient: LinearGradient(
                 begin: Alignment.topCenter,

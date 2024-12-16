@@ -60,11 +60,11 @@ class MasterProvider extends ChangeNotifier {
     if (apiResponse.response != null &&
         apiResponse.response!.statusCode == 200) {
       Map map = apiResponse.response!.data;
-      if (map['data'] == null || map['data'].isEmpty) {
+      if (map['years'] == null || map['years'].isEmpty) {
         responseModel =
             ResponseModel(false, map['message'] ?? 'Something Went Wrong!');
       } else {
-        map['data'].forEach((element) {
+        map['years'].forEach((element) {
           BatchModel model = BatchModel.fromJson(element);
           _batchList.add(model);
           notifyListeners();
@@ -118,29 +118,29 @@ class MasterProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<ResponseModel> getSemester() async {
+  Future<ResponseModel> getSemester({String? studentID}) async {
     _semesterList.clear;
     startLoader(true);
-    ApiResponse apiResponse = await masterRepo.getSemester();
+    ApiResponse apiResponse;
+    if(studentID != null){
+       apiResponse = await masterRepo.getSemester(student_id: studentID);
+    }else{
+      apiResponse = await masterRepo.getSemester();
+    }
     ResponseModel responseModel;
     if (apiResponse.response != null &&
         apiResponse.response!.statusCode == 200) {
       Map map = apiResponse.response!.data;
-      if (map['status'] != successCode1) {
+      if (map['semesters'] != null) {
+        map['semesters'].forEach((element) {
+          SemesterModel model = SemesterModel.fromJson(element);
+          _semesterList.add(model);
+          notifyListeners();
+        });
+        responseModel = ResponseModel(true, map['message'] ?? 'Success');
+      } else {
         responseModel =
             ResponseModel(false, map['message'] ?? 'Something Went Wrong!');
-      } else {
-        if (map['semesters'] != null) {
-          map['semesters'].forEach((element) {
-            SemesterModel model = SemesterModel.fromJson(element);
-            _semesterList.add(model);
-            notifyListeners();
-          });
-          responseModel = ResponseModel(true, map['message'] ?? 'Success');
-        } else {
-          responseModel =
-              ResponseModel(false, map['message'] ?? 'Something Went Wrong!');
-        }
       }
     } else {
       String errorMessage;
