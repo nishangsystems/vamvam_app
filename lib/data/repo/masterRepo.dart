@@ -23,8 +23,16 @@ class MasterRepo {
     }
   }
 
-  Future<ApiResponse> getSemester() async {
+  Future<ApiResponse> getSemester({
+    student_id="",
+  }) async {
     try {
+      String url = "";
+      if(student_id){
+        url = ApiConstant.getSemester;
+      }else{
+        url = ApiConstant.getSemester+"?student_id="+student_id;
+      }
       Response response = await dioClient1.get(
         ApiConstant.getSemester,
       );

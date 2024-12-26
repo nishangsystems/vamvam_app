@@ -71,13 +71,13 @@ Future<void> init() async {
   //     ApiConstant.currentSchoolUrl, sl<Dio>(instanceName: 'dio2'),
   //     loggingInterceptor: sl(), sharedPreferences: sl()));
 
-  sl.registerFactory(() => DioClient1(
-      ApiConstant.currentSchoolUrl, sl<Dio>(instanceName: 'dio2'),
-      loggingInterceptor: sl(), sharedPreferences: sl()));
-
-  sl.registerLazySingleton(() => DioClient3(
-      ApiConstant.baseUrl2, sl<Dio>(instanceName: 'dio3'),
-      loggingInterceptor: sl(), sharedPreferences: sl()));
+  // sl.registerFactory(() => DioClient1(
+  //     ApiConstant.currentSchoolUrl, sl<Dio>(instanceName: 'dio2'),
+  //     loggingInterceptor: sl(), sharedPreferences: sl()));
+  //
+  // sl.registerLazySingleton(() => DioClient3(
+  //     ApiConstant.baseUrl2, sl<Dio>(instanceName: 'dio3'),
+  //     loggingInterceptor: sl(), sharedPreferences: sl()));
 
   // Repository
   sl.registerLazySingleton(

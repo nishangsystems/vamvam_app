@@ -1,13 +1,32 @@
 {
   "project_info": {
-    "project_number": "882737043147",
-    "project_id": "vamvam-54cac",
-    "storage_bucket": "vamvam-54cac.appspot.com"
+    "project_number": "897668815421",
+    "project_id": "flexy-pay-2eac3",
+    "storage_bucket": "flexy-pay-2eac3.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:882737043147:android:7d04606d2b2fad605ced4e",
+        "mobilesdk_app_id": "1:897668815421:android:33da093dfb7454b8e8e854",
+        "android_client_info": {
+          "package_name": "com.flexypay.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAebsn6zw4M2X_iOoVXqkEuiWNBFD6cxsg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:897668815421:android:c33b1f451478dd1ce8e854",
         "android_client_info": {
           "package_name": "com.vam.vam"
         }
@@ -15,7 +34,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCyqQ9ygAlJu4qhuCnI7dMcHXY-Hglms3c"
+          "current_key": "AIzaSyAebsn6zw4M2X_iOoVXqkEuiWNBFD6cxsg"
         }
       ],
       "services": {
